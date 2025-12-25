@@ -1,0 +1,22 @@
+model_name,model_id,year,parameters_M,layers,attention_heads,hidden_size,architecture,benchmark,score,paper,explainability_score,explainability_notes,complexity_score
+BERT-base,bert-base-uncased,2019,110,12,12,768,encoder,GLUE,80.5,Devlin et al. (2019),3,"Attention weights accessible, interpretability tools available",2.5
+BERT-large,bert-large-uncased,2019,340,24,16,1024,encoder,GLUE,84.0,Devlin et al. (2019),2,More complex but similar interpretability tools,4.3999999999999995
+RoBERTa-base,roberta-base,2019,125,12,12,768,encoder,GLUE,83.0,Liu et al. (2019),3,Similar to BERT but optimized training,2.5500000000000003
+RoBERTa-large,roberta-large,2019,355,24,16,1024,encoder,GLUE,88.5,Liu et al. (2019),2,"Large model, challenging to interpret",4.45
+DistilBERT,distilbert-base-uncased,2019,66,6,12,768,encoder,GLUE,77.0,Sanh et al. (2019),4,"Distilled version, more interpretable",1.9533333333333331
+ALBERT-base,albert-base-v2,2020,12,12,12,768,encoder,GLUE,82.1,Lan et al. (2020),4,"Parameter sharing, more efficient",2.1733333333333333
+ALBERT-xxlarge,albert-xxlarge-v2,2020,235,12,64,4096,encoder,GLUE,89.4,Lan et al. (2020),2,Very large but parameter-efficient,3.25
+ELECTRA-base,google/electra-base-discriminator,2020,110,12,12,768,encoder,GLUE,85.1,Clark et al. (2020),3,Efficient pre-training,2.5
+ELECTRA-large,google/electra-large-discriminator,2020,335,24,16,1024,encoder,GLUE,88.0,Clark et al. (2020),2,Large but efficient,4.383333333333334
+DeBERTa-base,microsoft/deberta-base,2021,140,12,12,768,encoder,GLUE,88.0,He et al. (2021),3,Improved attention mechanism,2.6
+DeBERTa-large,microsoft/deberta-large,2021,400,24,16,1024,encoder,GLUE,90.8,He et al. (2021),2,State-of-the-art but complex,4.6000000000000005
+T5-base,t5-base,2020,220,12,12,768,encoder-decoder,GLUE,82.0,Raffel et al. (2020),2,"Seq2seq architecture, less interpretable",2.8666666666666667
+T5-large,t5-large,2020,770,24,16,1024,encoder-decoder,GLUE,85.0,Raffel et al. (2020),1,"Very large seq2seq, low interpretability",4.933333333333334
+BART-base,facebook/bart-base,2020,140,6,12,768,encoder-decoder,GLUE,79.5,Lewis et al. (2020),3,"Denoising autoencoder, moderate interpretability",2.1999999999999997
+BART-large,facebook/bart-large,2020,406,12,16,1024,encoder-decoder,GLUE,84.5,Lewis et al. (2020),2,"Large, complex architecture",3.82
+MobileBERT,google/mobilebert-uncased,2020,25,24,4,512,encoder,GLUE,81.5,Sun et al. (2020),4,"Optimized for mobile, more interpretable",2.1277777777777778
+TinyBERT,huawei-noah/TinyBERT_General_6L_768D,2020,67,6,12,768,encoder,GLUE,80.0,Jiao et al. (2020),4,"Distilled, lightweight",1.9566666666666668
+MiniLM,microsoft/MiniLM-L12-H384-uncased,2020,33,12,12,384,encoder,GLUE,78.5,Wang et al. (2020),4,"Very small, interpretable",2.2433333333333336
+FLAN-T5-base,google/flan-t5-base,2022,250,12,12,768,encoder-decoder,MMLU,49.9,Chung et al. (2022),2,"Instruction-tuned, moderate interpretability",2.966666666666667
+LLaMA-7B,huggyllama/llama-7b,2023,7000,32,32,4096,decoder,MMLU,68.9,Touvron et al. (2023),1,"Very large, low interpretability",5.0
+GPT-3.5,gpt-3.5-turbo,2022,175000,96,96,12288,decoder,MMLU,70.0,OpenAI (2022),1,"Extremely large, very low interpretability",5.0

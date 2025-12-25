@@ -1,0 +1,219 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage[numbers]{natbib}
+\usepackage{textgreek}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{adjustbox}
+\usepackage{threeparttable}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{}
+
+\newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+\providecommand{\keywords}[1]{\textbf{Keywords:} #1}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Exploring the Balance: A Deep Dive into Performance vs. Explainability in Natural Language Processing Models – A Comprehensive Meta-Analysis!},
+    pdfauthor={Kevin MEZUI},
+    pdfsubject={Artificial Intelligence, XAI, Responsible AI},
+    pdfkeywords={Performance-Explainability, Trade-off, NLP, Meta-Analysis}
+}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+\title{Exploring the Balance: A Deep Dive into Performance vs. Explainability in Natural Language Processing Models – A Comprehensive Meta-Analysis!}
+
+\author{Kevin MEZUI\thanks{Correspondence: kjmezui@gmail.com}\\
+Independent Researcher, Paris, France}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The presumed trade-off between performance and explainability remains a dominant paradigm in artificial intelligence. We conduct a systematic meta-analysis to quantitatively probe the relationship between these two dimensions in state-of-the-art natural language processing (NLP) models. We find that model complexity is statistically significantly related to perceived explainability based on a review of 21 major encoder, encoder-decoder, and decoder models from the years 2019-2023, but there is no significant relationship between performance and explainability by architecture (rho = -0.160, p = 0.489).
+\end{abstract}
+
+\keywords{Trade-off, Performance, Explainability, Interpretability, Natural Language Processing, Complexity, Encoder-based}
+
+\section{Introduction}
+
+The trade-off between performance and explainability has remained the central paradigm of artificial intelligence \cite{devlin2019bert, liu2019roberta, he2021deberta}. It is a popular notion that high performance goes hand in hand with complexity and opacity of models, and simpler and more interpretable architectures usually perform at lower accuracies \cite{raffel2020t5, lewis2020bart}. This firmly establishes a dichotomy that influences model selection, particularly in high-risk sectors-comprising healthcare, finance, and law-that demand both accuracy and interpretability \cite{rudin2019stop, doshi2017towards}.
+
+Though it has gained wide recognition, there is scant empirical evidence to support this trade-off, and what does exist is mostly anecdotal \cite{lipton2018mythos, molnar2022interpretable}. Much of the discussion is based on isolated comparisons of particular pairs of models rather than any systematic treatment of different architectures \cite{vaswani2017attention}. In addition, an explicit articulation of the dimension along which models are to be deemed relatively more ‘explainable’ has been allowed to vary from study to study, thereby further exacerbating difficulties attendant upon efforts at direct comparison \cite{vaswani2017attention, molnar2022interpretable}.
+
+This paper initiates a systematic meta-analysis as an attempt to quantitatively characterize the relationship between performance and explainability in state-of-the-art natural language processing (NLP) models. Leading 21 models from 2019 to 2023 have been analyzed here with the purpose of: (1) quantifying any correlation between their performance benchmarks and proxies for explainability, (2) identifying architectural features moderating such relationships, and (3) offering empirically based evidence toward model selection.
+
+Contrary to popular belief, we found negligible correlation between performance and explainability, hence throwing into doubt the determinism in the trade-off presumed by many. What we have discovered is that it is rather the architectural family-decoder versus encoder-and model complexity that weighs more heavily in the perception of explainability. This suggests, indeed, that the relation between performance and explainability is a lot more nuanced than most people think; thus, this has important implications for model development and deployment.
+
+\section{Results}
+
+\subsection{Descriptive Analysis}
+
+21 NLP models (encoder, n = 14; encoder-decoder, n = 5; decoder, n = 2) have been considered in our meta-analysis. Model performance (49.9-90.8, M = 80.77, SD = 9.06) <> explainability scores (1-4, M = 2.57, SD = 1.03) demonstrate an adequate degree of variation among the models selected as high-performing architectures for this study in terms of perceivability of their decisions across various domains and tasks. The number of parameters has a wide range from 12 million (ALBERT-base) to 175,000 million (GPT-3.5), thus reflecting the architectural diversity.
+
+\begin{table}[H]
+\centering
+\caption{Summary statistics of analyzed NLP models (n=21)}
+\label{tab:descriptive_stats}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{Variable} & \textbf{Mean} & \textbf{SD} & \textbf{Min} & \textbf{Max} \\
+\midrule
+Performance (0--100) & 80.77 & 9.06 & 49.9 & 90.8 \\
+Explainability (1--5) & 2.57 & 1.03 & 1.0 & 4.0 \\
+Parameters (Millions) & 8,863.8 & 38,095.7 & 12 & 175,000 \\
+Complexity Score & 3.26 & 1.12 & 1.5 & 5.0 \\
+Year & 2020.5 & 1.2 & 2019 & 2023 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figures/meta_analysis_complete_results.png}
+\caption{Performance, explainability, and architectural characteristics relationships of 21 NLP models. Performance vs. explainability score (Spearman's ρ = -0.160, p = 0.489). Performance vs. complexity score (ρ = 0.270, p = 0.236). Model performance over time by architecture. Breakdown of performance scores by architectural family. Spearman correlation matrix between key variables. Mean performance and mean explainability scores by architecture (multiplying explainability scores by 20 for visualization).}
+\label{fig:main_results}
+\end{figure}
+
+\subsection{The Lost Connection Spearman's Correlation: Performance vs. Explainability}
+
+In contrast to what was assumed about their compromise. This goes against the typical deterministic notion that postulates a trade-off between model explainability and performance, whereby less explainability leads to better performance. As seen in Figure \ref{fig:main_results}A) There is massive scatter, meaning models can attain both high performance with high explainability—DeBERTa-large, for instance, has a score of 90.8 with an explainability value of 2—and low performance with low explainability, like FLAN-T5-base, which scores 49.9 with an explainability value of 2.
+
+\subsection{Architectural Differences in Design}
+
+ANOVA resulted in significant differences both for performance (F = 4.06, p = 0.035) and explainability (F = 11.72, p < 0.001) between the architectural families. Encoder-based models demonstrated average performance at the highest level of 84.03, with explainability also leading the way at a value of 3.0 on average across all encoder-based models; decoder-based models demonstrated performance at the lowest level of 69.45, with explainability also trailing at an average value of only 1.0 across all decoder-based models (see Figure \ref{fig:main_results}D). No specific pairwise differences reached significance in Tukey's post-hoc tests, although trends were very directionally consistent with the architectural advantages of encoders.
+
+\subsection{Inversely proportional. Complexity and explainability}
+
+The more complex the models were perceived, the less explainable they were and very significantly so (ρ = -0.951, p < 0.001). Model performance shared only a weakly positive, insignificant relationship with complexity (ρ = 0.270, p = 0.236). In other words, if one added more bells and whistles to reduce explainability, this would not ensure that the model ran better. Contrary to the expectations of consistent enhancement, the year of release of the newer model was poorly correlated with better performance (ρ = -0.203, p = 0.376). This trend is due to both recent models that should have been performing at a higher level (e.g., GPT-3.5, 2022) and smaller models that were specific to tasks and optimized for efficiency rather than for benchmark performance. To further investigate the role of architectural categories, we executed a deep correlation analysis within each category. As can be seen from Figure~\ref{fig:supp_arch}, whereas the general correlation between performance and explainability stays insignificant, different trends surface within the architectural categories. Encoder-based models show the most consistent performance profile.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/figure_supp_architecture_analysis.png}
+    \caption{
+    Breakdown by architectural family. (A) Relative performance to explainability with reglines by architecture. (B) Distribution of performance scores. (C) Distribution of performance density, and (D)Spearman correlation matrix for all models.
+    }
+    \label{fig:supp_arch}
+\end{figure}
+
+\subsubsection{Temporal Development Timeline}
+The development of model characteristics between 2019 and 2023 reveals key trends (Figure~\ref{fig:supp_time}). Although the average number of parameters has increased, there is no clear monotonic improvement in benchmark performance. This timeline highlights the diversification of architectural strategies and the community's parallel interest in efficiency, specialization, and scale.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/figure_supp_timeline_analysis.png}
+    \caption{
+    Temporal analysis of NLP model development (2019-2023). (A) Performance timeline, with point size proportional to log(parameters). (B) Evolution of explainability scores over time. (C) Number of model versions per year and per architecture. (D) Heat map of average performance per year and per architecture.
+    }
+    \label{fig:supp_time}
+\end{figure}
+
+\section{Discussion}
+
+\subsection{Reinterpreting the Performance-Explainability Relationship}
+
+We examined the relationship between performance and explainability in different architectural designs. The lack of a significant correlation seems to confirm that this relationship isn't inevitable or uniform across architectures. Instead of a strict trade-off, we see a complex landscape where certain architectural choices (especially encoder-based designs) tend to encourage both high performance and reasonable explainability.
+
+Several factors may explain this surprising result. First, explainability assessments often focus on architectural transparency rather than actual interpretability in practice. Furthermore, the criteria for performance may not reflect actual utility, where explainability is of paramount importance. Yet another reason for the rapid growth of AI is the increasing interest in the community for interpretability, which may have fostered innovations that partially disassociate performance from transparency.
+
+\subsection{Architectural Determinants of Explainability}
+
+The architecturally meaningful discrepancies we observed suggest that explainability is more closely related to design choices than to performance levels. Encoder-based models, with their bidirectional attention mechanisms and generally moderate number of parameters, may offer more intuitive avenues for interpretability than decoder-based autoregressive models. This architectural advantage could stem from several factors: (1) more localized attention patterns, (2) easier visualization of token relationships, and (3) established interpretation tools developed primarily for encoder architectures.
+
+\subsection{Limitations and Future Directions}
+
+We have several outstanding limitations. The first is that our explainability ratings rely on expert assessments of architectural features rather than empirical studies with users. Further work should incorporate human evaluations of actual interpretability. Second, our sample size (n = 21), while adequate for a meta-analysis, limits the statistical power to detect subtle effects. Third, performance measures across different benchmarks may not be directly comparable despite our normalization efforts.
+
+Future research should: (1) develop standardized and validated measures of explainability across domains, (2) conduct larger-scale analyses including newer model families, and (3) investigate specific architectural features that enable both high performance and good explainability.
+
+\subsection{Practical Implications}
+
+Encouragingly for practitioners, when it comes to model selection, performance and explainability do not necessarily have to be mutually exclusive. Encoder-based models, especially those of moderate complexity, often offer competitive performance while maintaining reasonable interpretability. When explainability is paramount, the focus should be on the architectural family and specific features that improve interpretability, rather than assuming that any high-performing model will be opaque.
+
+Researchers should take note of these findings, which highlight the need to move beyond the trade-off paradigm and design architectures that explicitly optimize both dimensions. Recent innovations such as sparse attention mechanisms, modular architectures, and interpretability-by-design approaches represent promising avenues for further research.
+
+\section{Methods}
+
+\subsection{Model Selection and Data Collection}
+
+We systematically reviewed the literature to identify the most important NLP models published between 2019 and 2023. The inclusion criteria were as follows: (1) publication in a major conference or journal, (2) availability of performance metrics on standard benchmarks (GLUE, SuperGLUE, MMLU, or equivalents), and (3) sufficient architectural documentation for evaluating explainability. Our final sample included 21 models representing encoder (n = 14), encoder-decoder (n = 5), and decoder (n = 2) architectures.
+
+\subsection{Performance Metrics}
+
+Performance scores were normalized on a scale of 0 to 100 where necessary. For models evaluated on multiple benchmarks, we selected the score from the most comprehensive benchmark (giving priority to GLUE for language comprehension tasks). Where several variations were available, we picked the baseline or standard configuration to ensure comparability.
+
+\subsection{Explainability Scoring}
+
+We produced a compound explainability score (on a scale of 1 to 5) based on three architectural features: (1) parameter efficiency (fewer parameters promoting explainability), (2) the type of attention mechanism (bidirectional promoting explainability), and (3) the availability of established interpretation tools. Two independent evaluators rated each model (inter-rater reliability: κ = 0.82), with disagreements resolved through discussion. The grading rubric is supplied in the additional documents.
+
+\subsection{Statistical Analysis}
+We used Spearman's rank correlation to assess non-parametric relationships, ANOVA for comparisons between groups, and multiple regression for multivariate analysis. All analyses were performed in Python 3.9 using the SciPy, stats-models, and pandas libraries. The process for reproducing the code is available at as described in the Code Availability section.
+
+\subsection{Code Availability and Reproducibility}
+
+The complete code base for this study is organized in a structured repository to ensure full reproducibility. The repository contains the following components:
+
+\subsubsection{Data Collection Pipeline} 
+\begin{itemize} 
+\item \texttt{collect_data.py}: Main script for automated metadata extraction from Hugging Face, including performance metrics, model specifications, and documentation signals. 
+\item \texttt{manual_performance_dataset.py}: Creation of the manually-curated benchmark dataset from seminal literature. 
+\item \texttt{merge_data.py}: Integration of automated and manual data sources with consistency checks. 
+\item \texttt{clean_data.py}: Data cleaning and normalization procedures for performance metrics. 
+\end{itemize}
+
+\subsubsection{Analysis and Visualization Suite} 
+\begin{itemize} 
+\item \texttt{meta_analysis.py}: Comprehensive statistical analysis including Spearman correlations, ANOVA, linear regression, and generation of Figure\ref{fig:main_results}. 
+\item \texttt{figure_supp_architecture_correlation.py}: Architecture-specific correlation analysis producing Supplementary Figure \ref{fig:supp_arch}. 
+\item \texttt{figure_supp_timeline.py}: Temporal evolution analysis producing Supplementary Figure ~\ref{fig:supp_time}. 
+\item \texttt{generate_all_figures.py}: Master script executing the complete visualization pipeline. 
+\end{itemize}
+
+\subsubsection{Data Management} 
+\begin{itemize} 
+\item \texttt{comprehensive_nlp_models_database.csv}: The complete curated dataset of 21 NLP models with performance, explainability, and architectural metadata. 
+\item Intermediate files documenting each stage of the data processing pipeline. 
+\end{itemize}
+
+The repository follows computational reproducibility standards with explicit dependency specifications (Python 3.9, pandas, scipy, statsmodels, matplotlib, seaborn) and step-by-step execution instructions. All analyses can be regenerated from raw data to final figures with a single command execution. The code is available at  https://github.com/kjmezui/.
+
+\subsection{Supplementary Information}
+The whole set of data, the scoring rubric, and the model reproducibility instructions are available in the accompanying folder. The detailed architectural analysis and the temporal development schedule are presented in Figures \ ref {fig:supp_arch} and \ ref {fig:supp_time} in the Results section.
+
+\section{Conclusion}
+
+While we confirm that model complexity is an important predictor of perceived explainability, we find no significant correlation between performance and explainability across different architectures. Encoder-based models demonstrate that competitive performance does not necessarily come at the expense of interpretability.
+
+These findings imply that the AI community should stop accepting this trade-off as inevitable and instead focus on architectural innovations that optimize both dimensions. Future work should aim to develop standardized measures of explainability, conduct larger-scale empirical studies, and investigate specific design features that enable both high performance and good interpretability. By reframing the relationship between performance and explainability from a trade-off to a design challenge, we can accelerate progress toward AI systems that are both highly performant and truly understandable.
+
+\section*{Author Contributions}
+Kevin MEZUI conceptualized the survey, defined the methodology, collected and reviewed the data, visualized the data, and drafted the manuscript.
+
+\section*{Competing Interests}
+The author declares no competing interests.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

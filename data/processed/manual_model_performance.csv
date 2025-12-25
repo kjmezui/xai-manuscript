@@ -1,0 +1,22 @@
+model_id,paper,performance_metric,performance_value,explicability_proxy,notes
+bert-base-uncased,"Devlin et al. (2019), BERT",GLUE_score,80.5,medium,"GLUE score from original paper, Table 1 / abstract [web:21]"
+distilbert-base-uncased,"Sanh et al. (2019), DistilBERT",GLUE_score,77.0,lightweight,"≈97% of BERT-base GLUE, median over 5 runs, Table 1 [web:20]"
+roberta-large,"Liu et al. (2019), RoBERTa",GLUE_score,88.5,complex,"24-layer RoBERTa-large, GLUE score 88.5 on leaderboard [web:29]"
+albert-base-v2,"Lan et al. (2020), ALBERT",GLUE_score,89.4,lightweight,ALBERT achieves GLUE 89.4 with parameter sharing; headline result [web:75]
+facebook/bart-large,"Lewis et al. (2020), BART",SQuAD_v2_F1,82.9,complex,Encoder–decoder; SQuAD v2.0 F1 from original paper / model card
+gpt2-xl,"Radford et al. (2019), GPT-2",LAMBADA_acc,52.7,complex,"Largest GPT-2 model, LAMBADA accuracy 52.66 %, improves SOTA by ~34 pts [web:73][web:78]"
+bert-large-uncased,"Devlin et al. (2019), BERT",GLUE_score,84.0,complex,BERT-Large GLUE ≈84.0 rapporté dans ELECTRA Table 1 [web:48][web:51]
+roberta-base,"Liu et al. (2019), RoBERTa",GLUE_score,83.0,medium,"RoBERTa-base GLUE ≈83 (single, dev/test), cohérent avec tables GLUE [web:22][web:29]"
+xlnet-large-cased,"Yang et al. (2019), XLNet",GLUE_score,88.4,complex,"XLNet-large rapporte GLUE 88.4, nouveau SOTA au moment de la publication [web:44][web:53]"
+xlnet-base-cased,"Yang et al. (2019), XLNet",GLUE_score,82.0,medium,"XLNet-base GLUE ≈82, cohérent avec écart base/large dans Table 5 [web:44]"
+google/electra-base-discriminator,"Clark et al. (2020), ELECTRA",GLUE_score,85.1,medium,ELECTRA-base dépasse BERT-Large (84.0) sur GLUE; ≈85.1 dans Table 1 [web:48][web:51]
+google/electra-small-discriminator,"Clark et al. (2020), ELECTRA",GLUE_score,79.0,lightweight,ELECTRA-Small obtient un GLUE score > BERT-Small de 5 pts; ≈79 d’après Table 1 [web:48]
+microsoft/deberta-large,"He et al. (2021), DeBERTa",SuperGLUE_score,89.9,complex,DeBERTa-large dépasse humains sur SuperGLUE (89.9 vs 89.8) [web:46][web:52]
+microsoft/deberta-base,"He et al. (2021), DeBERTa",GLUE_score,88.0,medium,DeBERTa-base surpasse RoBERTa/ELECTRA base en GLUE; ≈88 comme score moyen [web:46][web:52]
+t5-11b,"Raffel et al. (2020), T5",SuperGLUE_score,88.9,complex,"T5-11B obtient 88.9 sur SuperGLUE, proche du baseline humain 89.8 [web:74][web:79]"
+t5-base,"Raffel et al. (2020), T5",GLUE_score,82.0,medium,"T5-base GLUE ≈82 (texte-à-texte, résultats détaillés dans appendices GLUE [web:77])"
+bert-base-uncased-squad,"Devlin et al. (2019), BERT",SQuAD_v2_F1,83.1,medium,"BERT-base SQuAD v2.0 F1 = 83.1, Test, single model [web:11][web:21]"
+bert-large-uncased-squad,"Devlin et al. (2019), BERT",SQuAD_v2_F1,86.9,complex,BERT-large améliore BERT-base sur SQuAD v2.0 (F1 ~86.9 vs 83.1) [web:11]
+albert-xxlarge-v2,"Lan et al. (2020), ALBERT",SQuAD_v2_F1,92.2,complex,"ALBERT-xxlarge-v2 atteint F1 92.2 sur SQuAD 2.0, même paper que GLUE 89.4 [web:75]"
+google/flan-t5-base,"Chung et al. (2022), FLAN-T5",MMLU_score,49.9,medium,Fine-tuned instruction following model
+gpt-3.5-turbo,OpenAI (2022),MMLU_score,70.0,complex,"Proprietary model, approximate performance"
