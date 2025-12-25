@@ -1,7 +1,7 @@
 # Reproducing the Analyses
 
 1. **Installation**: `pip install -r code/requirements.txt`
-2. **Data collection**: ERun the scripts in order:
+2. **Data collection**: Run the scripts in order:
    ```bash
 cd code/01_data_collection
 python manual_performance_dataset.py
@@ -15,4 +15,4 @@ cd ../03_analysis
 python meta_analysis.py
 cd ../04_visualization
 python generate_all_figures.py
-
+   ```
