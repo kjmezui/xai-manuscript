@@ -1,8 +1,9 @@
+# manual_performance_dataset.py
 import pandas as pd
 
-# Base de données manuelle : Performance réelle de modèles célèbres (données de la littérature)
-# Ces valeurs viennent des articles originaux ou de chiffres "headline" largement repris dans la communauté,
-# et sont FIABLES à l'échelle de ton analyse (pas pour une méta-analyse fine).
+# Manual database: Actual performance of famous models (literature data)
+# These values come from original papers or widely cited "headline" numbers in the community,
+# and are RELIABLE for your analysis scale (not for fine meta-analysis).
 manual_performance_db = [
     {
         "model_id": "bert-base-uncased",
@@ -45,7 +46,7 @@ manual_performance_db = [
         "notes": "Encoder–decoder; SQuAD v2.0 F1 from original paper / model card"
     },
 
-    # === AUTOREGRESSIF : GPT-2, LAMBADA ===
+    # === AUTOREGRESSIVE: GPT-2, LAMBADA ===
     {
         "model_id": "gpt2-xl",
         "paper": "Radford et al. (2019), GPT-2",
@@ -55,22 +56,22 @@ manual_performance_db = [
         "notes": "Largest GPT-2 model, LAMBADA accuracy 52.66 %, improves SOTA by ~34 pts [web:73][web:78]"
     },
 
-    # === VARIANTS BERT-LIKE SUR GLUE ===
+    # === BERT-LIKE VARIANTS ON GLUE ===
     {
         "model_id": "bert-large-uncased",
         "paper": "Devlin et al. (2019), BERT",
         "performance_metric": "GLUE_score",
         "performance_value": 84.0,  # BERT-LARGE GLUE from ELECTRA paper [web:48][web:51]
         "explicability_proxy": "complex",
-        "notes": "BERT-Large GLUE ≈84.0 rapporté dans ELECTRA Table 1 [web:48][web:51]"
+        "notes": "BERT-Large GLUE ≈84.0 reported in ELECTRA Table 1 [web:48][web:51]"
     },
     {
         "model_id": "roberta-base",
         "paper": "Liu et al. (2019), RoBERTa",
         "performance_metric": "GLUE_score",
-        "performance_value": 83.0,  # valeur ronde dérivée des tables GLUE/roberta [web:22][web:29]
+        "performance_value": 83.0,  # rounded value derived from GLUE/roberta tables [web:22][web:29]
         "explicability_proxy": "medium",
-        "notes": "RoBERTa-base GLUE ≈83 (single, dev/test), cohérent avec tables GLUE [web:22][web:29]"
+        "notes": "RoBERTa-base GLUE ≈83 (single, dev/test), consistent with GLUE tables [web:22][web:29]"
     },
     {
         "model_id": "xlnet-large-cased",
@@ -78,15 +79,15 @@ manual_performance_db = [
         "performance_metric": "GLUE_score",
         "performance_value": 88.4,  # XLNet-large ensemble GLUE [web:44][web:53]
         "explicability_proxy": "complex",
-        "notes": "XLNet-large rapporte GLUE 88.4, nouveau SOTA au moment de la publication [web:44][web:53]"
+        "notes": "XLNet-large reports GLUE 88.4, new SOTA at publication time [web:44][web:53]"
     },
     {
         "model_id": "xlnet-base-cased",
         "paper": "Yang et al. (2019), XLNet",
         "performance_metric": "GLUE_score",
-        "performance_value": 82.0,  # valeur approx. cohérente avec base vs large, GLUE tables [web:44]
+        "performance_value": 82.0,  # approx. value consistent with base vs large, GLUE tables [web:44]
         "explicability_proxy": "medium",
-        "notes": "XLNet-base GLUE ≈82, cohérent avec écart base/large dans Table 5 [web:44]"
+        "notes": "XLNet-base GLUE ≈82, consistent with base/large gap in Table 5 [web:44]"
     },
     {
         "model_id": "google/electra-base-discriminator",
@@ -94,15 +95,15 @@ manual_performance_db = [
         "performance_metric": "GLUE_score",
         "performance_value": 85.1,  # ELECTRA-base > BERT-large (84.0) [web:48][web:51]
         "explicability_proxy": "medium",
-        "notes": "ELECTRA-base dépasse BERT-Large (84.0) sur GLUE; ≈85.1 dans Table 1 [web:48][web:51]"
+        "notes": "ELECTRA-base exceeds BERT-Large (84.0) on GLUE; ≈85.1 in Table 1 [web:48][web:51]"
     },
     {
         "model_id": "google/electra-small-discriminator",
         "paper": "Clark et al. (2020), ELECTRA",
         "performance_metric": "GLUE_score",
-        "performance_value": 79.0,  # ELECTRA-small > BERT-small de ~5 pts [web:48]
+        "performance_value": 79.0,  # ELECTRA-small > BERT-small by ~5 pts [web:48]
         "explicability_proxy": "lightweight",
-        "notes": "ELECTRA-Small obtient un GLUE score > BERT-Small de 5 pts; ≈79 d’après Table 1 [web:48]"
+        "notes": "ELECTRA-Small achieves GLUE score > BERT-Small by 5 pts; ≈79 from Table 1 [web:48]"
     },
 
     # === DEBERTA (SuperGLUE/GLUE) ===
@@ -112,36 +113,36 @@ manual_performance_db = [
         "performance_metric": "SuperGLUE_score",
         "performance_value": 89.9,  # Single model SuperGLUE macro-average [web:46][web:52]
         "explicability_proxy": "complex",
-        "notes": "DeBERTa-large dépasse humains sur SuperGLUE (89.9 vs 89.8) [web:46][web:52]"
+        "notes": "DeBERTa-large surpasses humans on SuperGLUE (89.9 vs 89.8) [web:46][web:52]"
     },
     {
         "model_id": "microsoft/deberta-base",
         "paper": "He et al. (2021), DeBERTa",
         "performance_metric": "GLUE_score",
-        "performance_value": 88.0,  # décrit comme supérieur à RoBERTa/ELECTRA de taille comparable [web:46][web:52]
+        "performance_value": 88.0,  # described as superior to comparable size RoBERTa/ELECTRA [web:46][web:52]
         "explicability_proxy": "medium",
-        "notes": "DeBERTa-base surpasse RoBERTa/ELECTRA base en GLUE; ≈88 comme score moyen [web:46][web:52]"
+        "notes": "DeBERTa-base outperforms RoBERTa/ELECTRA base on GLUE; ≈88 as average score [web:46][web:52]"
     },
 
-    # === T5 (texte-à-texte) ===
+    # === T5 (text-to-text) ===
     {
         "model_id": "t5-11b",
         "paper": "Raffel et al. (2020), T5",
         "performance_metric": "SuperGLUE_score",
-        "performance_value": 88.9,  # T5-11B sur SuperGLUE, proche de l’humain 89.8 [web:74][web:79]
+        "performance_value": 88.9,  # T5-11B on SuperGLUE, close to human 89.8 [web:74][web:79]
         "explicability_proxy": "complex",
-        "notes": "T5-11B obtient 88.9 sur SuperGLUE, proche du baseline humain 89.8 [web:74][web:79]"
+        "notes": "T5-11B achieves 88.9 on SuperGLUE, close to human baseline 89.8 [web:74][web:79]"
     },
     {
         "model_id": "t5-base",
         "paper": "Raffel et al. (2020), T5",
         "performance_metric": "GLUE_score",
-        "performance_value": 82.0,  # ordre de grandeur pour T5-base sur GLUE, cf. EncT5/T5 analyses [web:77]
+        "performance_value": 82.0,  # order of magnitude for T5-base on GLUE, cf. EncT5/T5 analyses [web:77]
         "explicability_proxy": "medium",
-        "notes": "T5-base GLUE ≈82 (texte-à-texte, résultats détaillés dans appendices GLUE [web:77])"
+        "notes": "T5-base GLUE ≈82 (text-to-text, detailed results in GLUE appendices [web:77])"
     },
 
-    # === VARIANTS BERT / GLUE POUR L’AXE EXPLICABILITÉ ===
+    # === BERT VARIANTS / GLUE FOR EXPLAINABILITY AXIS ===
     {
         "model_id": "bert-base-uncased-squad",
         "paper": "Devlin et al. (2019), BERT",
@@ -156,17 +157,17 @@ manual_performance_db = [
         "performance_metric": "SQuAD_v2_F1",
         "performance_value": 86.9,  # BERT-large SQuAD v2.0 Test F1 (headline ~86.9, >83.1 base) [web:11]
         "explicability_proxy": "complex",
-        "notes": "BERT-large améliore BERT-base sur SQuAD v2.0 (F1 ~86.9 vs 83.1) [web:11]"
+        "notes": "BERT-large improves over BERT-base on SQuAD v2.0 (F1 ~86.9 vs 83.1) [web:11]"
     },
     {
         "model_id": "albert-xxlarge-v2",
         "paper": "Lan et al. (2020), ALBERT",
         "performance_metric": "SQuAD_v2_F1",
-        "performance_value": 92.2,  # SQuAD 2.0 F1 pour le meilleur ALBERT [web:75]
+        "performance_value": 92.2,  # SQuAD 2.0 F1 for best ALBERT [web:75]
         "explicability_proxy": "complex",
-        "notes": "ALBERT-xxlarge-v2 atteint F1 92.2 sur SQuAD 2.0, même paper que GLUE 89.4 [web:75]"
+        "notes": "ALBERT-xxlarge-v2 achieves F1 92.2 on SQuAD 2.0, same paper as GLUE 89.4 [web:75]"
     },
-    # Exemple d'extension possible
+    # Possible extension example
 
     {
         "model_id": "google/flan-t5-base",
@@ -187,22 +188,22 @@ manual_performance_db = [
 
 ]
 
-# Convertir en DataFrame
+# Convert to DataFrame
 manual_df = pd.DataFrame(manual_performance_db)
-print("Base de données manuelle de performance (extrait) :")
+print("Manual performance database (excerpt):")
 print(manual_df[['model_id', 'performance_metric', 'performance_value', 'explicability_proxy']])
 
-# Sauvegarder
+# Save
 manual_df.to_csv("manual_model_performance.csv", index=False)
-print(f"\n✅ Base de données sauvegardée avec {len(manual_df)} entrées.")
+print(f"\nDatabase saved with {len(manual_df)} entries.")
 
-# Analyse simple
+# Simple analysis
 print("\n" + "="*70)
-print("ANALYSE PRÉLIMINAIRE : PERFORMANCE vs PROXY D'EXPLICABILITÉ")
+print("PRELIMINARY ANALYSIS: PERFORMANCE vs EXPLAINABILITY PROXY")
 print("="*70)
 
-# Grouper par proxy et calculer les stats
+# Group by proxy and calculate stats
 grouped = manual_df.groupby('explicability_proxy')['performance_value']
-print("\nPerformance moyenne par catégorie de proxy :")
+print("\nAverage performance by proxy category:")
 for name, group in grouped:
     print(f"  {name}: {group.mean():.2f} (n={len(group)}, min={group.min():.2f}, max={group.max():.2f})")

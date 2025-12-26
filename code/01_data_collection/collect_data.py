@@ -1,10 +1,11 @@
+# collect_data.py
 from huggingface_hub import list_models, model_info, HfApi
 import pandas as pd
 import time
 import re
 import json
 
-print("Recherche de modèles de classification de texte populaires...")
+print("Searching for popular text classification models...")
 models = list_models(
     filter="text-classification",
     sort="downloads",
@@ -13,11 +14,11 @@ models = list_models(
 )
 
 model_ids = [model.id for model in models]
-print(f"Nombre de modèles à traiter : {len(model_ids)}")
+print(f"Number of models to process: {len(model_ids)}")
 
-# Catégories pour notre proxy d'explicabilité basé sur l'architecture
+# Categories for our explainability proxy based on architecture
 model_type_categories = {
-    'distil': 'lightweight',       # Modèles distillés, plus simples
+    'distil': 'lightweight',       # Distilled models, simpler
     'tiny': 'lightweight',
     'mini': 'lightweight',
     'small': 'lightweight',
@@ -26,19 +27,19 @@ model_type_categories = {
     'roberta': 'complex',
     'deberta': 'complex',
     'electra': 'medium',
-    'albert': 'lightweight',       # Albert partage ses paramètres
+    'albert': 'lightweight',       # Albert shares parameters
     'xlm': 'complex',
-    'bert': 'medium'               # Par défaut pour BERT
+    'bert': 'medium'               # Default for BERT
 }
 
-# Initialiser l'API pour récupérer le README
+# Initialize API to fetch README
 api = HfApi()
 
 data = []
 
 for i, mid in enumerate(model_ids):
     try:
-        print(f"[{i+1}/{len(model_ids)}] Traitement de : {mid}")
+        print(f"[{i+1}/{len(model_ids)}] Processing: {mid}")
         info = model_info(mid)
         model_data = {
             "model_id": mid,
@@ -47,21 +48,21 @@ for i, mid in enumerate(model_ids):
             "likes": info.likes or 0,
         }
 
-        # --- 1. EXTRACTION DES PERFORMANCES (Correction majeure) ---
+        # --- 1. PERFORMANCE EXTRACTION (Major correction) ---
         card_data = info.cardData
         perf_extracted = False
         
         if card_data:
             try:
-                # Convertir cardData en dictionnaire si possible
+                # Convert cardData to dictionary if possible
                 if hasattr(card_data, 'to_dict'):
                     card_dict = card_data.to_dict()
                 else:
                     card_dict = dict(card_data) if hasattr(card_data, '__dict__') else {}
                 
-                # Essayer d'extraire les performances via model-index
+                # Try to extract performance via model-index
                 if isinstance(card_dict, dict) and card_dict:
-                    # Rechercher récursivement des données de performance
+                    # Recursively search for performance data
                     def extract_performance(data, prefix=""):
                         performances = {}
                         if isinstance(data, dict):
@@ -82,7 +83,7 @@ for i, mid in enumerate(model_ids):
                         model_data[key] = value
                         perf_extracted = True
                     
-                    # Recherche spécifique de model-index (structure standard)
+                    # Specific search for model-index (standard structure)
                     if 'model-index' in card_dict:
                         model_index = card_dict['model-index']
                         if isinstance(model_index, list):
@@ -102,9 +103,9 @@ for i, mid in enumerate(model_ids):
                                                             model_data[col_name] = value
                                                             perf_extracted = True
             except Exception as e:
-                print(f"   ⚠️  Erreur lors de l'extraction des performances pour {mid}: {str(e)[:50]}")
+                print(f"Error extracting performance for {mid}: {str(e)[:50]}")
 
-        # --- 2. PROXY POUR L'EXPLICABILITÉ : TYPE D'ARCHITECTURE ---
+        # --- 2. EXPLAINABILITY PROXY: ARCHITECTURE TYPE ---
         model_name_lower = mid.lower()
         model_type = "unknown"
         for key, category in model_type_categories.items():
@@ -113,8 +114,8 @@ for i, mid in enumerate(model_ids):
                 break
         model_data["model_type_proxy"] = model_type
 
-        # --- 3. EXTRACTION DE LA TAILLE (Paramètres) ---
-        # Essayer de récupérer le fichier de configuration
+        # --- 3. SIZE EXTRACTION (Parameters) ---
+        # Try to fetch configuration file
         try:
             config_url = f"https://huggingface.co/{mid}/raw/main/config.json"
             import requests
@@ -124,7 +125,7 @@ for i, mid in enumerate(model_ids):
                 if 'num_parameters' in config:
                     model_data["num_parameters"] = config['num_parameters']
                 elif 'hidden_size' in config and 'num_hidden_layers' in config:
-                    # Estimation grossière pour BERT-like
+                    # Rough estimation for BERT-like models
                     hidden_size = config['hidden_size']
                     num_layers = config['num_hidden_layers']
                     vocab_size = config.get('vocab_size', 30522)
@@ -132,8 +133,8 @@ for i, mid in enumerate(model_ids):
         except:
             model_data["num_parameters"] = "N/A"
 
-        # --- 4. PRÉSENCE D'UNE FICHE DÉTAILLÉE ---
-        # Récupérer le README pour vérifier la présence de sections importantes
+        # --- 4. PRESENCE OF DETAILED DOCUMENTATION ---
+        # Fetch README to check for important sections
         try:
             readme_content = api.model_info(mid).cardData
             if readme_content:
@@ -143,7 +144,7 @@ for i, mid in enumerate(model_ids):
                                    "training data", "evaluation", "results"])
                 model_data["has_model_card_signal"] = int(has_sections)
                 
-                # Recherche de valeurs numériques de performance dans le README
+                # Search for numerical performance values in README
                 performance_patterns = [
                     r'accuracy[\s:]*([0-9]*\.?[0-9]+)%?',
                     r'f1[\s:]*([0-9]*\.?[0-9]+)%?',
@@ -161,7 +162,7 @@ for i, mid in enumerate(model_ids):
                         
                         try:
                             perf_value = float(value)
-                            # Ne pas ajouter si déjà extrait via model-index
+                            # Don't add if already extracted via model-index
                             if not perf_extracted:
                                 model_data[f"perf_text_extracted"] = perf_value
                                 perf_extracted = True
@@ -174,76 +175,76 @@ for i, mid in enumerate(model_ids):
 
         data.append(model_data)
         
-        # Pause pour respecter les limites de l'API
+        # Pause to respect API limits
         time.sleep(0.5)
 
     except Exception as e:
-        print(f"   ⚠️  Erreur sur {mid} : {str(e)[:100]}...")
+        print(f"Error on {mid}: {str(e)[:100]}...")
         continue
 
-# Création du DataFrame
+# Create DataFrame
 df = pd.DataFrame(data)
 output_file = "huggingface_models_with_proxy.csv"
 df.to_csv(output_file, index=False)
-print(f"\n✅ Données sauvegardées dans '{output_file}'.")
+print(f"\nData saved to '{output_file}'.")
 
-# Analyse
+# Analysis
 print("\n" + "="*60)
-print("ANALYSE DES DONNÉES COLLECTÉES :")
+print("COLLECTED DATA ANALYSIS:")
 print("="*60)
-print(f"1. Total des modèles : {len(df)}")
+print(f"1. Total models: {len(df)}")
 
-# Compter les modèles avec au moins une métrique de performance
+# Count models with at least one performance metric
 perf_cols = [col for col in df.columns if col.startswith('perf_')]
-print(f"2. Colonnes de performance extraites : {len(perf_cols)}")
+print(f"2. Extracted performance columns: {len(perf_cols)}")
 
 if perf_cols:
     df_with_perf = df.dropna(subset=perf_cols, how='all')
-    print(f"3. Modèles avec au moins une métrique de performance : {len(df_with_perf)}")
+    print(f"3. Models with at least one performance metric: {len(df_with_perf)}")
     
     if len(df_with_perf) > 0:
-        # Afficher un exemple de métrique
+        # Show a metric example
         sample_model = df_with_perf.iloc[0]
         sample_perf = {col: sample_model[col] for col in perf_cols if pd.notna(sample_model[col])}
-        print(f"   Exemple (premier modèle) : {list(sample_perf.keys())[:3]}")
+        print(f"   Example (first model): {list(sample_perf.keys())[:3]}")
 
-# Distribution du proxy de type
-print(f"4. Distribution du proxy 'model_type_proxy' :")
+# Proxy type distribution
+print(f"4. 'model_type_proxy' distribution:")
 print(df['model_type_proxy'].value_counts())
 
-# Distribution des signaux de fiche modèle
-print(f"5. Modèles avec fiche technique détaillée : {df['has_model_card_signal'].sum()}/{len(df)}")
+# Model card signal distribution
+print(f"5. Models with detailed technical sheet: {df['has_model_card_signal'].sum()}/{len(df)}")
 
 print("="*60)
-print("POUR VOTRE ANALYSE :")
-print("1. Ouvrez le fichier CSV généré.")
-print("2. Utilisez les colonnes 'perf_*' pour la variable de Performance (P).")
-print("3. Utilisez la colonne 'model_type_proxy' (codée ordinalement : lightweight < medium < complex) comme premier proxy pour l'Explicabilité (E).")
-print("4. Vous pouvez croiser cela avec 'has_model_card_signal'.")
+print("FOR YOUR ANALYSIS:")
+print("1. Open the generated CSV file.")
+print("2. Use the 'perf_*' columns for the Performance variable (P).")
+print("3. Use the 'model_type_proxy' column (ordinal coding: lightweight < medium < complex) as first proxy for Explainability (E).")
+print("4. You can cross-reference this with 'has_model_card_signal'.")
 print("="*60)
 
-# Analyse supplémentaire
+# Additional analysis
 print("\n" + "="*70)
-print("INVESTIGATION DÉTAILLÉE :")
+print("DETAILED INVESTIGATION:")
 print("="*70)
 
-# Vérifier quelques modèles spécifiques
+# Check specific models
 test_models = ["bert-base-uncased", "distilbert-base-uncased", "roberta-base"]
-print("\nVérification de modèles connus :")
+print("\nChecking known models:")
 for mid in test_models:
     if mid in df['model_id'].values:
         row = df[df['model_id'] == mid].iloc[0]
         perf_cols_model = [col for col in perf_cols if col in row and pd.notna(row[col])]
-        print(f"  {mid}: {len(perf_cols_model)} métriques de performance")
+        print(f"  {mid}: {len(perf_cols_model)} performance metrics")
         if perf_cols_model:
-            for col in perf_cols_model[:2]:  # Afficher 2 métriques max
+            for col in perf_cols_model[:2]:  # Show max 2 metrics
                 print(f"    - {col}: {row[col]}")
 
 print("\n" + "="*70)
-print("PROCHAINES ÉTAPES POUR L'ARTICLE :")
+print("NEXT STEPS FOR THE ARTICLE:")
 print("="*70)
-print("1. Fusionner ces données avec votre base manuelle")
-print("2. Nettoyer et normaliser les valeurs de performance")
-print("3. Coder les variables pour l'analyse statistique")
-print("4. Exécuter les analyses de corrélation et régression")
-print("5. Créer les visualisations pour l'article")
+print("1. Merge this data with your manual database")
+print("2. Clean and normalize performance values")
+print("3. Code variables for statistical analysis")
+print("4. Run correlation and regression analyses")
+print("5. Create visualizations for the article")

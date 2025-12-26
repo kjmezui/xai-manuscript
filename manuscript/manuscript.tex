@@ -31,19 +31,20 @@
     linkcolor=blue,
     filecolor=magenta,
     urlcolor=cyan,
-    pdftitle={Exploring the Balance: A Deep Dive into Performance vs. Explainability in Natural Language Processing Models – A Comprehensive Meta-Analysis!},
+    pdftitle={Explainability vs Performance in NLP.},
     pdfauthor={Kevin MEZUI},
-    pdfsubject={Artificial Intelligence, XAI, Responsible AI},
-    pdfkeywords={Performance-Explainability, Trade-off, NLP, Meta-Analysis}
+    pdfsubject={Explainable AI, NLP},
+    pdfkeywords={Artificial intelligence, Model complexity, Nlp architectures, Statistical correlation, Transformer models}
 }
 
 \geometry{margin=2.5cm}
 \onehalfspacing
 
-\title{Exploring the Balance: A Deep Dive into Performance vs. Explainability in Natural Language Processing Models – A Comprehensive Meta-Analysis!}
+\title{Examining the Balance: An in-depth meta-analysis of explainability versus performance in natural language processing models.}
 
 \author{Kevin MEZUI\thanks{Correspondence: kjmezui@gmail.com}\\
 Independent Researcher, Paris, France}
+
 \date{\today}
 
 \begin{document}
@@ -51,7 +52,7 @@ Independent Researcher, Paris, France}
 \maketitle
 
 \begin{abstract}
-The presumed trade-off between performance and explainability remains a dominant paradigm in artificial intelligence. We conduct a systematic meta-analysis to quantitatively probe the relationship between these two dimensions in state-of-the-art natural language processing (NLP) models. We find that model complexity is statistically significantly related to perceived explainability based on a review of 21 major encoder, encoder-decoder, and decoder models from the years 2019-2023, but there is no significant relationship between performance and explainability by architecture (rho = -0.160, p = 0.489).
+The presumed trade-off between performance and explainability remains a dominant paradigm in artificial intelligence. We conduct a systematic meta-analysis to quantitatively probe the relationship between these two dimensions in state-of-the-art natural language processing (NLP) models. We find that model complexity is statistically significantly related to perceived explainability based on a review of 21 major encoder, encoder-decoder, and decoder models from the years 2019-2023, but there is no significant relationship between performance and explainability by architecture (ρ = -0.160, ρ = 0.489).
 \end{abstract}
 
 \keywords{Trade-off, Performance, Explainability, Interpretability, Natural Language Processing, Complexity, Encoder-based}
@@ -70,7 +71,7 @@ Contrary to popular belief, we found negligible correlation between performance 
 
 \subsection{Descriptive Analysis}
 
-21 NLP models (encoder, n = 14; encoder-decoder, n = 5; decoder, n = 2) have been considered in our meta-analysis. Model performance (49.9-90.8, M = 80.77, SD = 9.06) <> explainability scores (1-4, M = 2.57, SD = 1.03) demonstrate an adequate degree of variation among the models selected as high-performing architectures for this study in terms of perceivability of their decisions across various domains and tasks. The number of parameters has a wide range from 12 million (ALBERT-base) to 175,000 million (GPT-3.5), thus reflecting the architectural diversity.
+21 NLP models (encoder, n = 14; encoder-decoder, n = 5; decoder, n = 2) have been considered in our meta-analysis. Model performance (range: 49.9-90.8, M = 80.77, SD = 9.06) <> explainability scores (1-4, M = 2.57, SD = 1.03) demonstrate an adequate degree of variation among the models selected as high-performing architectures for this study in terms of perceivability of their decisions across various domains and tasks. The number of parameters has a wide range from 12 million (ALBERT-base) to 175,000 million (GPT-3.5), thus reflecting the architectural diversity.
 
 \begin{table}[H]
 \centering
@@ -98,7 +99,7 @@ Year & 2020.5 & 1.2 & 2019 & 2023 \\
 
 \subsection{The Lost Connection Spearman's Correlation: Performance vs. Explainability}
 
-In contrast to what was assumed about their compromise. This goes against the typical deterministic notion that postulates a trade-off between model explainability and performance, whereby less explainability leads to better performance. As seen in Figure \ref{fig:main_results}A) There is massive scatter, meaning models can attain both high performance with high explainability—DeBERTa-large, for instance, has a score of 90.8 with an explainability value of 2—and low performance with low explainability, like FLAN-T5-base, which scores 49.9 with an explainability value of 2.
+In contrast to what was assumed about their compromise. This goes against the typical deterministic notion that postulates a trade-off between model explainability and performance, whereby less explainability leads to better performance. As seen in Figure \ref{fig:main_results} A) There is massive scatter, meaning models can attain both high performance with high explainability—DeBERTa-large, for instance, has a score of 90.8 with an explainability value of 2—and low performance with low explainability, like FLAN-T5-base, which scores 49.9 with an explainability value of 2.
 
 \subsection{Architectural Differences in Design}
 
@@ -168,7 +169,7 @@ Performance scores were normalized on a scale of 0 to 100 where necessary. For m
 We produced a compound explainability score (on a scale of 1 to 5) based on three architectural features: (1) parameter efficiency (fewer parameters promoting explainability), (2) the type of attention mechanism (bidirectional promoting explainability), and (3) the availability of established interpretation tools. Two independent evaluators rated each model (inter-rater reliability: κ = 0.82), with disagreements resolved through discussion. The grading rubric is supplied in the additional documents.
 
 \subsection{Statistical Analysis}
-We used Spearman's rank correlation to assess non-parametric relationships, ANOVA for comparisons between groups, and multiple regression for multivariate analysis. All analyses were performed in Python 3.9 using the SciPy, stats-models, and pandas libraries. The process for reproducing the code is available at as described in the Code Availability section.
+We used Spearman's rank correlation to assess non-parametric relationships, ANOVA for comparisons between groups, and multiple regression for multivariate analysis. All analyses were performed in Python 3.9 using the SciPy, stats-models, and pandas libraries. The process for reproducing the code is available as described in the Code Availability section.
 
 \subsection{Code Availability and Reproducibility}
 
@@ -196,7 +197,7 @@ The complete code base for this study is organized in a structured repository to
 \item Intermediate files documenting each stage of the data processing pipeline. 
 \end{itemize}
 
-The repository follows computational reproducibility standards with explicit dependency specifications (Python 3.9, pandas, scipy, statsmodels, matplotlib, seaborn) and step-by-step execution instructions. All analyses can be regenerated from raw data to final figures with a single command execution. The code is available at  https://github.com/kjmezui/.
+The repository follows computational reproducibility standards with explicit dependency specifications (Python 3.9, pandas, scipy, statsmodels, matplotlib, seaborn) and step-by-step execution instructions. All analyses can be regenerated from raw data to final figures with a single command execution. The code is available at https://github.com/kjmezui/xai-manuscript.
 
 \subsection{Supplementary Information}
 The whole set of data, the scoring rubric, and the model reproducibility instructions are available in the accompanying folder. The detailed architectural analysis and the temporal development schedule are presented in Figures \ ref {fig:supp_arch} and \ ref {fig:supp_time} in the Results section.

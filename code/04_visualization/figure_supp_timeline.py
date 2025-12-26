@@ -13,21 +13,21 @@ plt.rcParams.update({
     'savefig.bbox': 'tight'
 })
 
-# Charger les données
+# Load data
 df = pd.read_csv("comprehensive_nlp_models_database.csv")
 
-# Créer la figure
+# Create figure
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-# Couleurs et styles
+# Colors and styles
 arch_colors = {'encoder': '#1f77b4', 'encoder-decoder': '#2ca02c', 'decoder': '#d62728'}
-size_scale = 100  # Échelle pour la taille des points
+size_scale = 100  # Scale for point sizes
 
-# 1. Timeline principale : Performance vs Année
+# 1. Main timeline: Performance vs Year
 for arch in df['architecture'].unique():
     subset = df[df['architecture'] == arch]
     
-    # Taille des points basée sur le log des paramètres
+    # Point size based on log of parameters
     sizes = np.log10(subset['parameters_M'] + 1) * size_scale
     
     axes[0,0].scatter(subset['year'], subset['score'],
@@ -35,10 +35,10 @@ for arch in df['architecture'].unique():
                      alpha=0.7, edgecolors='black', linewidth=0.5,
                      label=f'{arch} (n={len(subset)})')
     
-    # Ajouter des étiquettes pour les modèles importants
+    # Add labels for important models
     for idx, row in subset.iterrows():
-        if row['parameters_M'] > 10000 or row['score'] > 88:  # Grands ou performants
-            axes[0,0].annotate(row['model_name'].split('-')[0],  # Nom court
+        if row['parameters_M'] > 10000 or row['score'] > 88:  # Large or high-performing
+            axes[0,0].annotate(row['model_name'].split('-')[0],  # Short name
                              (row['year'], row['score']),
                              xytext=(5, 5), textcoords='offset points',
                              fontsize=8, alpha=0.8)
@@ -49,7 +49,7 @@ axes[0,0].set_title('A) Performance Timeline by Architecture and Size')
 axes[0,0].legend()
 axes[0,0].grid(True, alpha=0.3)
 
-# 2. Évolution de l'explicabilité dans le temps
+# 2. Explainability evolution over time
 for arch in df['architecture'].unique():
     subset = df[df['architecture'] == arch]
     axes[0,1].scatter(subset['year'], subset['explainability_score'],
@@ -57,7 +57,7 @@ for arch in df['architecture'].unique():
                      alpha=0.7, edgecolors='black', linewidth=0.5,
                      label=f'{arch}')
     
-    # Ligne de tendance
+    # Trend line
     if len(subset) > 2:
         z = np.polyfit(subset['year'], subset['explainability_score'], 1)
         p = np.poly1d(z)
@@ -71,11 +71,11 @@ axes[0,1].set_title('B) Explainability Evolution Over Time')
 axes[0,1].legend()
 axes[0,1].grid(True, alpha=0.3)
 
-# 3. Timeline des innovations (graphique à barres)
-# Grouper par année et architecture
+# 3. Innovation timeline (bar chart)
+# Group by year and architecture
 yearly_counts = df.groupby(['year', 'architecture']).size().unstack(fill_value=0)
 
-# Créer un stacked bar chart
+# Create stacked bar chart
 bottom_values = np.zeros(len(yearly_counts))
 for i, arch in enumerate(['encoder', 'encoder-decoder', 'decoder']):
     if arch in yearly_counts.columns:
@@ -90,16 +90,16 @@ axes[1,0].set_title('C) Model Releases by Year and Architecture')
 axes[1,0].legend()
 axes[1,0].grid(True, alpha=0.3, axis='y')
 
-# 4. Heatmap des performances par année et architecture
-# Créer une matrice de performances moyennes
+# 4. Performance heatmap by year and architecture
+# Create average performance matrix
 heatmap_data = pd.pivot_table(df, values='score', 
                               index='architecture', 
                               columns='year', 
                               aggfunc='mean')
 
-# Réorganiser les colonnes et lignes
+# Reorder columns and rows
 heatmap_data = heatmap_data.reindex(index=['encoder', 'encoder-decoder', 'decoder'])
-heatmap_data = heatmap_data.sort_index(axis=1)  # Trier les colonnes
+heatmap_data = heatmap_data.sort_index(axis=1)  # Sort columns
 
 sns.heatmap(heatmap_data, annot=True, fmt='.1f', cmap='YlOrRd',
             ax=axes[1,1], cbar_kws={'label': 'Average Performance'})
@@ -111,14 +111,14 @@ plt.suptitle('Temporal Analysis of NLP Model Development (2019-2023)',
              fontsize=14, fontweight='bold', y=1.02)
 plt.tight_layout()
 
-# Sauvegarder
+# Save
 plt.savefig('figure_supp_timeline_analysis.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-print("✅ Figure supplémentaire sauvegardée: figure_supp_timeline_analysis.png")
+print("Supplementary figure saved: figure_supp_timeline_analysis.png")
 
-# Générer aussi une table chronologique
-print("\n📊 Chronologie des modèles par année:")
+# Also generate chronological table
+print("\nModel chronology by year:")
 for year in sorted(df['year'].unique()):
     year_models = df[df['year'] == year]
     print(f"\n{year}:")

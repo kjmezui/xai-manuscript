@@ -1,17 +1,19 @@
-npj Artificial Intelligence - Manuscript Submission
+Nature Machine Intelligence - Manuscript Submission
 ==================================================
 
 Manuscript ID: 
-Title: Making AI Understandable, Reliable, and Trustworthy: How to Balance Performance, User-friendliness, and Confidence in Deep Learning Systems
+Title: Examining the Balance: An in-depth meta-analysis of explainability versus performance in natural language processing models.
 Corresponding Author: Kevin MEZUI (kjmezui@gmail.com)
 
 CONTENTS
 --------
 This bundle contains the complete LaTeX source files required to compile the submitted manuscript:
 
-1. manuscript_main.tex - Main LaTeX document
-2. references.bib      - BibTeX bibliography database
-3. figures/            - Directory containing all figure files (PNG format)
+1. manuscript/         - Directory containing the manuscript.tex - Main LaTeX document
+                       - references.bib      - BibTeX bibliography database 
+                       - along with all figure files (PNG format)
+2. data/               - Directory containing all figure files (PNG format)
+3. code/               - Directory containing all processed files (CSV format)
 4. README.txt          - This file
 
 COMPILATION INSTRUCTIONS

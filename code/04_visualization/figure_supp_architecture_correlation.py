@@ -13,25 +13,25 @@ plt.rcParams.update({
     'savefig.bbox': 'tight'
 })
 
-# Charger les données
+# Load data
 df = pd.read_csv("comprehensive_nlp_models_database.csv")
 
-# Créer la figure
+# Create figure
 fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 
-# 1. Scatter plot avec régression par architecture
+# 1. Scatter plot with regression by architecture
 architectures = df['architecture'].unique()
 colors = {'encoder': 'blue', 'encoder-decoder': 'green', 'decoder': 'red'}
 markers = {'encoder': 'o', 'encoder-decoder': 's', 'decoder': '^'}
 
-# Plot principal
+# Main plot
 for arch in architectures:
     subset = df[df['architecture'] == arch]
     axes[0,0].scatter(subset['explainability_score'], subset['score'],
                      color=colors[arch], marker=markers[arch], s=100,
                      label=f'{arch} (n={len(subset)})', alpha=0.8, edgecolors='black')
     
-    # Ligne de régression par architecture
+    # Regression line by architecture
     if len(subset) > 2:
         z = np.polyfit(subset['explainability_score'], subset['score'], 1)
         p = np.poly1d(z)
@@ -40,7 +40,7 @@ for arch in architectures:
         axes[0,0].plot(x_range, p(x_range), color=colors[arch], 
                       linestyle='--', alpha=0.6, linewidth=1.5)
         
-        # Calculer la corrélation
+        # Calculate correlation
         corr, p_val = stats.spearmanr(subset['explainability_score'], subset['score'])
         print(f"{arch}: ρ = {corr:.3f}, p = {p_val:.4f}")
 
@@ -50,7 +50,7 @@ axes[0,0].set_title('A) Performance vs Explainability by Architecture')
 axes[0,0].legend()
 axes[0,0].grid(True, alpha=0.3)
 
-# 2. Box plot comparatif
+# 2. Comparative box plot
 df_box = df.copy()
 df_box['Performance'] = df['score']
 df_box['Architecture'] = df['architecture']
@@ -65,7 +65,7 @@ axes[0,1].set_title('B) Performance Distribution by Architecture')
 axes[0,1].set_ylabel('Performance')
 axes[0,1].grid(True, alpha=0.3, axis='y')
 
-# 3. Violin plot avec répartition
+# 3. Violin plot with distribution
 sns.violinplot(data=df_box, x='Architecture', y='Performance',
                order=['encoder', 'encoder-decoder', 'decoder'],
                palette=colors, inner='quartile', ax=axes[1,0])
@@ -73,14 +73,14 @@ axes[1,0].set_title('C) Performance Density by Architecture')
 axes[1,0].set_ylabel('Performance')
 axes[1,0].grid(True, alpha=0.3, axis='y')
 
-# 4. Matrice de corrélation par architecture
-# Créer une figure de corrélation pour chaque architecture
+# 4. Correlation matrix by architecture
+# Create correlation figure for each architecture
 corr_data = df[['score', 'explainability_score', 'complexity_score', 'parameters_M']]
 
-# Normaliser les paramètres pour l'échelle
+# Normalize parameters for scale
 corr_data['log_parameters'] = np.log10(corr_data['parameters_M'] + 1)
 
-# Calculer les corrélations
+# Calculate correlations
 corr_matrix = corr_data[['score', 'explainability_score', 'complexity_score', 'log_parameters']].corr(method='spearman')
 
 sns.heatmap(corr_matrix, annot=True, fmt='.2f', cmap='coolwarm', 
@@ -93,8 +93,8 @@ axes[1,1].set_yticklabels(['Performance', 'Explainability', 'Complexity', 'log(P
 plt.suptitle('Detailed Analysis by Architectural Family', fontsize=14, fontweight='bold', y=1.02)
 plt.tight_layout()
 
-# Sauvegarder
+# Save
 plt.savefig('figure_supp_architecture_analysis.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-print("✅ Figure supplémentaire sauvegardée: figure_supp_architecture_analysis.png")
+print("Supplementary figure saved: figure_supp_architecture_analysis.png")
