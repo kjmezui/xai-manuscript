@@ -1,14 +1,10 @@
-%!TEX encoding = UTF-8 Unicode
-%\UseRawInputEncoding
-\documentclass[3p,times]{elsarticle}
+\documentclass[preprint,12pt]{elsarticle}
 
 % ========== PACKAGES ==========
 \usepackage[utf8]{inputenc}
-%\usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{multirow}
@@ -16,15 +12,31 @@
 \usepackage{placeins}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{xcolor}
+\usepackage{xcolor} 
 \usepackage{dirtree}
-\usepackage{hyperref}
 \usepackage{listings}
-\usepackage{xcolor}
+\usepackage{adjustbox}
+\usepackage{threeparttable}
+\usepackage{ragged2e}
+\usepackage{enumitem}
+\usepackage{siunitx}
+\usepackage{lineno}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+\usepackage{microtype}
+% \biboptions{numbers,sort&compress}
+
+% ========== CONFIGURATIONS ==========
+\graphicspath{{figures/}} 
+
+% Unicode characters
 \DeclareUnicodeCharacter{200D}{} 
 \DeclareUnicodeCharacter{200C}{} 
 \DeclareUnicodeCharacter{03C1}{\(\rho\)}
 \DeclareUnicodeCharacter{2212}{-}
+
 \lstset{
     basicstyle=\ttfamily\small,
     breaklines=true,
@@ -40,40 +52,25 @@
     upquote=true,
     literate={├}{|}1 {─}{--}1 {│}{|}1 {└}{`}1 
 }
-\usepackage{adjustbox}
-\usepackage{threeparttable}
-\usepackage{ragged2e}
-\usepackage{enumitem}
-\usepackage{siunitx}
-\usepackage{lineno} 
-\graphicspath{{figures/}} 
 
-\hypersetup{
-    colorlinks=true,
-    unicode=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=cyan,
-    pdftitle={Explainability vs Performance in NLP},
-    pdfauthor={Kevin MEZUI},
-    pdfkeywords={Artificial intelligence, Model Complexity, NLP architectures}
-}
+\usepackage[colorlinks=true, citecolor=blue, linkcolor=blue, urlcolor=blue]{hyperref}
 
 \newcolumntype{P}[1]{>{\RaggedRight\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
-
 \setlist{nosep, leftmargin=*}
 
+% ========== DOCUMENT ==========
 \begin{document}
 
-% ========== FRONTMATTER ==========
 \begin{frontmatter}
 
 \title{Re-evaluating the Explainability-Performance Trade-Off Paradigm in Natural Language Processing Models: A Quantitative Meta-Analysis of Transformer Architectures (2019-2023).}
 
-\author[me]{Kevin MEZUI\corref{cor1}}
-\cortext[cor1]{Correspondence: kjmezui@gmail.com}
+\author[me]{\texorpdfstring{Kevin MEZUI\corref{cor1}}{Kevin MEZUI}}
+\ead{kjmezui@gmail.com}
+\cortext[cor1]{Corresponding author}
 \address[me]{Independent Researcher, Paris, France}
+
 
 \begin{abstract}
 A foundational principle in the field of artificial intelligence asserts that there is a trade-off between a model's explainability and its effectiveness. This trade-off significantly influences model selection for critical applications. This study presents a meta-analysis of 21 advanced NLP models from 2019 to 2023, encompassing encoder, encoder-decoder, and decoder architectures. A quantitative explainability framework was developed, grounded in architectural features, parameter efficiency, and the availability of interpretability tools.
@@ -88,6 +85,7 @@ Explainable AI \sep model interpretability \sep performance trade-off \sep natur
 \end{keyword}
 
 \end{frontmatter}
+\linenumbers
 
 % ========== HIGHLIGHTS ==========
 \begin{highlights}
@@ -102,13 +100,13 @@ Explainable AI \sep model interpretability \sep performance trade-off \sep natur
 
 % ========== INTRODUCTION ==========
 \section{Introduction}
-\label{sec:introduction}
+\label{sec:intro}
 
 Although the literature often discusses a trade-off between explainability and performance, there has yet to be a unified quantitative meta-analysis of Transformer architectures that employs standardized explainability metrics. This paper aims to bridge this gap by providing a systematic, reproducible comparison of Transformer architectures using harmonized explainability and performance metrics.
 
-The‍‌ issue of reconciling model capacity and explainability remains a divisive matter in AI research and application. The prevailing theory postulates an inherent conflict: as accuracy increases, models become more complex and less transparent \cite{lipton2018mythos, rudin2019stop}. This seemingly inevitable trade-off largely determines model choices in areas such as medical diagnostics \cite{rajpurkar2017chexnet}, credit scoring \cite{hossain2025risk}, and legal adjudication \cite{surden2014machine}, where high accuracy coupled with interpretability is essential for reliable operation, compliance with legal regulations, and user trust.
+The‍‌ issue of reconciling model capacity and explainability remains a divisive matter in AI research and application. The prevailing theory postulates an inherent conflict: as accuracy increases, models become more complex and less transparent \cite{lipton2018mythos,rudin2019stop}. This seemingly inevitable trade-off largely determines model choices in areas such as medical diagnostics \cite{rajpurkar2017chexnet}, credit scoring, and legal adjudication, where high accuracy coupled with interpretability is essential for reliable operation, compliance with legal regulations, and user trust.
 
-Although these types of models have permeated the public domain, scientific support for this trade-off is surprisingly minimal, most of it anecdotal \cite{crook2023revisiting}. Studies so far have largely limited themselves to making side-by-side comparisons of individual model pairs, rather than fully investigating different types of model architectures simultaneously \cite{crook2023revisiting}. Therefore, the present article's outcomes contribute to a deeper academic-industrial understanding of how model interpretability is affected by various factors. Also, there is ongoing disagreement in the community about the definition of explainability metrics, which alters views of expressibility across studies based on different operational definitions of interpretability \cite{pawlicki2024evaluating}. Such variation in methodology makes it difficult to draw broadly applicable conclusions about the core relationship between transparency and machine performance, and complicates direct comparisons. The rapid proliferation of transformer-based architectures in NLP over the last five years facilitated a detailed study of this relationship. Rigorous architectural paradigms emerged, evolved, and diversified in great numbers in the years 2019-2023: encoder-only models (e.g., BERT \cite{devlin2019bert}, RoBERTa \cite{liu2019roberta}), encoder-decoder models (e.g., T5 \cite{raffel2020t5}, BART \cite{lewis2020bart}), and decoder-only models (e.g., GPT series \cite{brown2020language}). This diverse mix of architecture, along with pronounced variation in model scale, training methods, and application domains, offers a perfect opportunity to study how different design choices affect the performance-explainability trade-off in modern AI systems.
+Although these types of models have permeated the public domain, scientific support for this trade-off is surprisingly minimal, most of it anecdotal. Studies so far have largely limited themselves to making side-by-side comparisons of individual model pairs, rather than fully investigating different types of model architectures simultaneously. Therefore, the present article's outcomes contribute to a deeper academic-industrial understanding of how model interpretability is affected by various factors. Also, there is ongoing disagreement in the community about the definition of explainability metrics, which alters views of expressibility across studies based on different operational definitions of interpretability. Such variation in methodology makes it difficult to draw broadly applicable conclusions about the core relationship between transparency and machine performance, and complicates direct comparisons. The rapid proliferation of transformer-based architectures in NLP over the last five years facilitated a detailed study of this relationship. Rigorous architectural paradigms emerged, evolved, and diversified in great numbers in the years 2019-2023: encoder-only models (e.g., BERT \cite{devlin2019bert}, RoBERTa \cite{liu2019roberta}), encoder-decoder models (e.g., T5 \cite{raffel2020t5}, BART \cite{lewis2020bart}), and decoder-only models (e.g., GPT series \cite{brown2020language}). This diverse mix of architecture, along with pronounced variation in model scale, training methods, and application domains, offers a perfect opportunity to study how different design choices affect the performance-explainability trade-off in modern AI systems.
 
 The research conducts an extensive meta-analysis exploring three main questions: (1) To what extent are performance and explainability quantitatively linked in NLP architectures? (2) What are the best predictors of explainability among architectural features? (3) How can practitioners be invited to model selections done wisely in terms of balancing performance and explainability? The analysis was performed on 21 NLP models spanning 2019 to 2023, and a quantitative explainability metric was formulated across three aspects: structural transparency, parameter efficiency, and the exploitation of interpretability tools.
 
@@ -124,36 +122,36 @@ This paper is structured as follows: Section~\ref{sec:related_work} presents a r
 \label{sec:related_work}
 
 \subsection{Conceptual Foundations of Explainable AI}
-The field of explainable artificial intelligence (XAI) has evolved from early research on expert systems and rule-based inference mechanisms to contemporary methodologies that address the explainability of high-dimensional, nonlinear neural architectures. The conceptual foundations of XAI encompass several complementary perspectives: epistemological systems that investigate the nature and criteria of explanation in artificial systems \cite{miller2019explanation}, cognitive and psychological models that analyze how humans comprehend and evaluate machine-generated explanations \cite{hoffman2018metrics}, and computational approaches that provide operational techniques and methods for model interpretation \cite{guidotti2018survey}.
+The field of explainable artificial intelligence (XAI) has evolved from early research on expert systems and rule-based inference mechanisms to contemporary methodologies that address the explainability of high-dimensional, nonlinear neural architectures. The conceptual foundations of XAI encompass several complementary perspectives: epistemological systems that investigate the nature and criteria of explanation in artificial systems \cite{miller2019explanation}, cognitive and psychological models that analyze how humans comprehend and evaluate machine-generated explanations, and computational approaches that provide operational techniques and methods for model interpretation \cite{guidotti2018survey}.
 
-A fundamental distinction is commonly drawn among intrinsic interpretability—where model structures are designed to be directly comprehensible to humans (e.g., decision trees and linear models)—and post-hoc explainability, which refers to the application of auxiliary techniques to explain the behavior of otherwise opaque models after training \cite{lipton2018mythos}. Early work in XAI predominantly emphasized intrinsically interpretable models \cite{swamy2023future}. In contrast, lately the focus has been primarily on post-hoc explanatory methods, particularly in deep learning for computer vision and natural language processing tasks \cite{mostafa2023explainable}.
+A fundamental distinction is commonly drawn among intrinsic interpretability—where model structures are designed to be directly comprehensible to humans (e.g., decision trees and linear models)—and post-hoc explainability, which refers to the application of auxiliary techniques to explain the behavior of otherwise opaque models after training \cite{lipton2018mythos}. Early work in XAI predominantly emphasized intrinsically interpretable models. In contrast, lately the focus has been primarily on post-hoc explanatory methods, particularly in deep learning for computer vision and natural language processing tasks.
 
 \subsection{Explainability in Natural Language Processing}
 
-The emergence of transformer architectures has fundamentally reshaped both the capabilities of natural language processing (NLP) systems and the associated challenges of model explainability \cite{mohammadi2025explainability}. Early research on interpreting neural language models predominantly examined recurrent neural network architectures, using methods such as attention-weight visualization \cite{bahdanau2014neural} and gradient-based attribution techniques \cite{li2015visualizing}. The subsequent introduction of self-attention modules into transformer models created new opportunities for interpretability, as the resulting attention weight distributions offer an inherently structured means of visualizing and analyzing the model's internal allocation of focus \cite{vaswani2017attention}.
+The emergence of transformer architectures has fundamentally reshaped both the capabilities of natural language processing (NLP) systems and the associated challenges of model explainability. Early research on interpreting neural language models predominantly examined recurrent neural network architectures, using methods such as attention-weight visualization \cite{bahdanau2014neural} and gradient-based attribution techniques. The subsequent introduction of self-attention modules into transformer models created new opportunities for interpretability, as the resulting attention weight distributions offer an inherently structured means of visualizing and analyzing the model's internal allocation of focus \cite{vaswani2017attention}.
 
-Contemporary approaches to explainability in natural language processing (NLP) can be grouped into several methodological families. These include: \textit{feature attribution methods}, which identify salient input tokens or spans that contribute most strongly to a model's prediction \cite{sundararajan2017axiomatic}; \textit{example-based methods}, which retrieve similar training instances to justify or contextualize model outputs \cite{wallace2019interpreting}; \textit{rationalization methods}, which generate natural language justifications in conjunction with model results \cite{leiber2019rationalization}; and \textit{probe-based methods}, which analyze internal model representations using controlled interventions and auxiliary prediction tasks \cite{belinkov2021probing}.
+Contemporary approaches to explainability in natural language processing (NLP) can be grouped into several methodological families. These include: \textit{feature attribution methods}, which identify salient input tokens or spans that contribute most strongly to a model's prediction; \textit{example-based methods}, which retrieve similar training instances to justify or contextualize model outputs; \textit{rationalization methods}, which generate natural language justifications in conjunction with model results; and \textit{probe-based methods}, which analyze internal model representations using controlled interventions and auxiliary prediction tasks.
 
-Despite this methodological heterogeneity, several studies have attempted to compare explainability across different architectural families or to quantify its relationship with overall model effectiveness \cite{atanasova2020diagnostic}. Nevertheless, a comprehensive and methodical characterization of these relationships remains an open research problem \cite{heyen2024effect}. Moreover, most existing evaluations are restricted to specific models or narrowly defined task domains, thereby constraining the extent to which their findings can be generalized across the wider NLP landscape \cite{mohammadi2025explainability}.
+Despite this methodological heterogeneity, several studies have attempted to compare explainability across different architectural families or to quantify its relationship with overall model effectiveness. Nevertheless, a comprehensive and methodical characterization of these relationships remains an open research problem. Moreover, most existing evaluations are restricted to specific models or narrowly defined task domains, thereby constraining the extent to which their findings can be generalized across the wider NLP landscape.
 
 \subsection{Performance Evaluation in NLP}
 
-Standardized benchmarks have been pivotal in advancing research in natural language processing (NLP) and facilitating systematic, quantitative model comparisons \cite{subramonian2023navigating}. The earliest benchmark suites focused on very limited tasks such as part-of-speech tagging or named-entity recognition, whereas modern evaluation frameworks consider a much broader spectrum of language understanding and generation skills.
+Standardized benchmarks have been pivotal in advancing research in natural language processing (NLP) and facilitating systematic, quantitative model comparisons. The earliest benchmark suites focused on very limited tasks such as part-of-speech tagging or named-entity recognition, whereas modern evaluation frameworks consider a much broader spectrum of language understanding and generation skills.
 
-Some leading benchmark series are GLUE \cite{wang2018glue} and its follow-up, SuperGLUE [24], used for general-purpose language understanding; MMLU \cite{hendrycks2020measuring} for large-scale multitasking language understanding; and HELM \cite{liang2022holistic}, which provides a holistic evaluation of language models. Most of these benchmarks emphasize predictive correctness, robustness, and generalization, but give interpretability and explainability only a very minor role \cite{sun2025circuit}.
+Some leading benchmark series are GLUE and its follow-up, SuperGLUE, used for general-purpose language understanding; MMLU for large-scale multitasking language understanding; and HELM, which provides a holistic evaluation of language models. Most of these benchmarks emphasize predictive correctness, robustness, and generalization, but give interpretability and explainability only a very minor role.
 
-The scaling hypothesis, that a model's increased size and capacity can yield continuous performance improvements across various tasks, has served as a guiding principle for organizing recent NLP research \cite{kaplan2020scaling}. This focus on size, however, has often overshadowed interpretability, and relatively few works have examined how explainability-related measures change with factors such as the number of parameters or the model's structural Complexity. As a result, the interplay among model scale, task efficacy, and explainability remains an obscure and uncharted topic in today's NLP discussion \cite{heyen2024effect}.
+The scaling hypothesis, that a model's increased size and capacity can yield continuous performance improvements across various tasks, has served as a guiding principle for organizing recent NLP research. This focus on size, however, has often overshadowed interpretability, and relatively few works have examined how explainability-related measures change with factors such as the number of parameters or the model's structural Complexity. As a result, the interplay among model scale, task efficacy, and explainability remains an obscure and uncharted topic in today's NLP discussion.
 
 \subsection{The Performance-Explainability Trade-off Debate}
 
-The idea that there is a trade-off between performance and explainability has long been a topic of discussion in machine learning, particularly in the context of the bias-variance trade-off \cite{guan2022bias} and the complexity-accuracy relationship \cite{deo2015machine}. For a long time, simple models like linear regression and decision trees were considered easier to interpret but less capable of capturing Complexity than more sophisticated models such as neural networks \cite{linardatos2020explainable}.
+The idea that there is a trade-off between performance and explainability has long been a topic of discussion in machine learning, particularly in the context of the bias-variance trade-off and the complexity-accuracy relationship. For a long time, simple models like linear regression and decision trees were considered easier to interpret but less capable of capturing Complexity than more sophisticated models such as neural networks \cite{linardatos2020explainable}.
 
-However, some scholars have started to challenge the notion that a trade-off is inevitable for present-day deep learning models. On the one hand, there is some indication that newly engineered architectures can perform very well while remaining interpretable \cite{chaudhari2021attentive}. On the other hand, some research has argued that whether a trade-off exists depends on the task and setting \cite{crook2023revisiting}. Overall, the situation remains very unclear, as different researchers have used different evaluation methods and models, yielding contradictory results.
+However, some scholars have started to challenge the notion that a trade-off is inevitable for present-day deep learning models. On the one hand, there is some indication that newly engineered architectures can perform very well while remaining interpretable. On the other hand, some research has argued that whether a trade-off exists depends on the task and setting. Overall, the situation remains very unclear, as different researchers have used different evaluation methods and models, yielding contradictory results.
 
 The present meta-analysis offers a fresh perspective on the discussion by systematically presenting numerical evidence from existing NLP models and leveraging a uniform testing framework to enable equitable comparisons across different architectures and performance levels.
 
 % ========== METHODS ==========
-\section{Methods}
+\section{Methodology}
 \label{sec:methods}
 
 \subsection{Study Design and Scope}
@@ -165,7 +163,7 @@ We applied four inclusion criteria for model selection:
 \begin{enumerate}
     \item \textbf{ Publication timeframe}: Models that came out from January 2019 to December 2023 and that include archival conference or journal papers, or formal technical reports.
 
-    \item \textbf{Performance evaluation}: Models should have shared performance results on at least two recognized benchmarks from these groups: GLUE \cite{wang2018glue}, SuperGLUE \cite{wang2019superglue}, or MMLU \cite{hendrycks2020measuring}. This allows for a comparable evaluation of the models' effectiveness.
+    \item \textbf{Performance evaluation}: Models should have shared performance results on at least two recognized benchmarks from these groups: GLUE, SuperGLUE, or MMLU. This allows for a comparable evaluation of the models' effectiveness.
 
     \item \textbf{Architectural documentation}: Sufficient technical information must be provided to identify features relevant to explainability, such as types of attention mechanisms, parameter layouts, and parts.
 
@@ -201,6 +199,7 @@ We developed a new quantitative system for measuring explainability, emphasizing
 
 \subsubsection{Parameter Performance Dimension}
 Efficiency in model parameters measures a model's ability to strike a good balance between power and explainability. It is based on the premise that two models with similar performance, the one with fewer parameters, would be easier to interpret. We get this score by applying a logarithmic transformation to the parameter count to account for exponential growth.
+
 \[E_{\text{params}} = 1 - \frac{\log(P_i + 1)}{\max(\log(P + 1))}\]
 
 where $P_i$ stands for the number of parameters of the model $i$, and $\max(\log(P + 1))$ represents the highest log-transformed number of parameters among all models (the increment by 1 is for preventing issues with zero parameters). 
@@ -299,11 +298,11 @@ Model size also differed drastically, with the number of parameters ranging from
 
 The years of publication were from 2019 to 2023, with an average of 2020.5, representing the period when transformer models were rapidly evolving.
 
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
 \caption{Descriptive statistics of analyzed NLP models (n=21)}
 \label{tab:descriptive_stats}
-\begin{tabular}{@{}lrrrr@{}}
+\begin{tabularx}{\textwidth}{@{}l XXXXX @{}}
 \toprule
 \textbf{Variable} & \textbf{Mean} & \textbf{SD} & \textbf{Min} & \textbf{Max} \\
 \midrule
@@ -313,7 +312,7 @@ Parameters (Millions) & 8,863.8 & 38,095.7 & 12 & 175,000 \\
 Complexity Score & 3.26 & 1.12 & 1.5 & 5.0 \\
 Year & 2020.5 & 1.2 & 2019 & 2023 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Performance-Explainability Relationship Analysis}
@@ -323,15 +322,15 @@ This implies that one can deliver high performance while keeping explainability 
 
 Panel A in Figure~\ref{fig:main_results} shows that there are quite a few models spread all along the gradation between performance and explainability. The right-top corner, where both performance and explainability are high, is not empty (for example, RoBERTa-large: performance = 86.4, explainability = 3.0). Interestingly, it also has spots that correspond to combinations falling toward the extremes of one dimension and the midpoint of the other one (e.g., high performance-low explainability: GPT-3.5: performance = 85.2, explainability = 1.0; or low performance-moderate explainability: FLAN-T5-base: performance = 49.9, explainability = 2.0).
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/meta_analysis_complete_results.png}
+    \includegraphics[width=0.8\textwidth]{figures/meta_analysis_complete_results.png}
     \caption{
     (A) Overall, across all models, performance and explainability scores do not correlate ‍‌significantly.  
     (B) An intricate model is generally difficult to explain, while a simpler model can be easily explained. This is why there is an inverse relationship between the Complexity of a model and its ‍‌explainability.  
     (C) The colors reveal the different architectural families and their respective distributions in the performance-explainability ‍‌space.
     }
-\label{fig:main_results}
+\label{fig:main_results}    
 \end{figure}
 
 Most likely, the lack of significant correlation will also be observed in model groups that are sorted by publication year or number of parameters, given the demonstrated robustness of the results across various types and scales of models.
@@ -341,34 +340,42 @@ Architectural families were found to differ substantially in performance ($F(2, 
 
 Encoder models had the best average performance (84.03, SD = 5.12) and explainability (3.0, SD = 0.8), whereas decoder models scored the lowest on both metrics (69.45 performance, SD = 9.45; 1.0 explainability, SD = 0.0). The encoder-decoder models gave results in between (73.32 performance, SD = 11.85; 2.57 explainability, SD = 0.3).
 
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
-\caption{Architecture-specific analysis of performance and explainability relationships}
+\caption{Architecture-specific analysis of performance and explainability relationships.}
 \label{tab:architecture_correlations}
-\begin{adjustbox}{width=\textwidth}
-\begin{tabular}{@{}lcccccc@{}}
-\toprule
-\textbf{Architecture} & \textbf{N} & \textbf{Performance $\leftrightarrow$ Explainability} & \textbf{Complexity $\leftrightarrow$ Explainability} & \textbf{Parameters $\leftrightarrow$ Performance} & \textbf{Year $\leftrightarrow$ Explainability} & \textbf{Average Performance} \\
-\midrule
-Encoder & 14 & $\rho = 0.12$ ($p = 0.681$) & $\rho = -0.85^{***}$ ($p < 0.001$) & $\rho = 0.38$ ($p = 0.182$) & $\rho = -0.25$ ($p = 0.394$) & 84.03 $\pm$ 5.12 \\
-Encoder-Decoder & 5 & $\rho = -0.40$ ($p = 0.505$) & $\rho = -0.90^{*}$ ($p = 0.037$) & $\rho = 0.10$ ($p = 0.873$) & $\rho = -0.30$ ($p = 0.624$) & 73.32 $\pm$ 11.85 \\
-Decoder & 2 & $\rho = 0.50$ ($p = 0.667$) & $\rho = -1.00^{**}$ ($p = 0.005$) & $\rho = 0.50$ ($p = 0.667$) & $\rho = 0.50$ ($p = 0.667$) & 69.45 $\pm$ 9.45 \\
-\midrule
-\textbf{Overall} & 21 & $\rho = -0.16$ ($p = 0.489$) & $\rho = -0.95^{***}$ ($p < 0.001$) & $\rho = 0.27$ ($p = 0.236$) & $\rho = -0.20$ ($p = 0.376$) & 80.77 $\pm$ 9.06 \\
-\bottomrule
-\end{tabular}
-\end{adjustbox}
 \small
-Note: Spearman's $\rho$ is reported with significance levels: $^{*}p < 0.05$, $^{**}p < 0.01$, $^{***}p < 0.001$.
+\setlength{\tabcolsep}{3pt} % Réduit l'espace entre les colonnes
+% Définition d'une colonne X centrée (nécessite \usepackage{ragged2e})
+\newcolumntype{C}{>{\Centering\arraybackslash}X}
+
+\begin{tabularx}{\textwidth}{@{} l c C C C C C @{}}
+\toprule
+\textbf{Arch.} & \textbf{N} & \textbf{Perf. $\leftrightarrow$ Expl.} & \textbf{Compl. $\leftrightarrow$ Expl.} & \textbf{Param. $\leftrightarrow$ Perf.} & \textbf{Year $\leftrightarrow$ Expl.} & \textbf{Avg. Perf.} \\
+\midrule
+Encoder & 14 & $\rho = 0.12$ ($p = .681$) & $\rho = -0.85^{***}$ ($p < .001$) & $\rho = 0.38$ ($p = .182$) & $\rho = -0.25$ ($p = .394$) & 84.0 $\pm$ 5.1 \\
+\addlinespace
+Enc-Dec & 5 & $\rho = -0.40$ ($p = .505$) & $\rho = -0.90^{*}$ ($p = .037$) & $\rho = 0.10$ ($p = .873$) & $\rho = -0.30$ ($p = .624$) & 73.3 $\pm$ 11.9 \\
+\addlinespace
+Decoder & 2 & $\rho = 0.50$ ($p = .667$) & $\rho = -1.00^{**}$ ($p = .005$) & $\rho = 0.50$ ($p = .667$) & $\rho = 0.50$ ($p = .667$) & 69.5 $\pm$ 9.5 \\
+\midrule
+\textbf{Overall} & 21 & $\rho = -0.16$ ($p = .489$) & $\rho = -0.95^{***}$ ($p < .001$) & $\rho = 0.27$ ($p = .236$) & $\rho = -0.20$ ($p = .376$) & 80.8 $\pm$ 9.1 \\
+\bottomrule
+\end{tabularx}
+
+\begin{tablenotes}
+    \footnotesize
+    \item \textit{Note:} Spearman's $\rho$ reported. Significance: $^{*}p < 0.05$, $^{**}p < 0.01$, $^{***}p < 0.001$. Perf: Performance; Expl: Explainability; Compl: Complexity; Param: Parameters.
+\end{tablenotes}
 \end{table}
 
 Tukey's HSD post hoc test comparisons showed that encoder models significantly outperformed decoder models in both performance ($p = 0.028$, Cohen's $d = 1.87$) and explainability ($p < 0.001$, Cohen's $d = 3.25$). The comparisons between encoder and encoder-decoder models for performance ($p = 0.062$, Cohen's $d = 1.12$) and explainability ($p = 0.071$, Cohen's $d = 0.68$) were near-significant but unsignificant.
 
 Figure~\ref{fig:supp_arch} visually summarizes the architectural differences. The charts show distinct patterns in the model groups' performance-explainability relationships, the distribution of the performance data, and the correlation structures.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
    \centering
-   \includegraphics[width=\textwidth]{figures/figure_supp_architecture_analysis.png}
+   \includegraphics[width=0.8\textwidth]{figures/figure_supp_architecture_analysis.png}
    \caption{
    Further analysis of architecture differences:  
    (A) Distribution of performance within architecture families.   
@@ -376,7 +383,7 @@ Figure~\ref{fig:supp_arch} visually summarizes the architectural differences. Th
    (C) Interpretability indices of attentive models grouped by architecture.
    (D) Efficiency of parameter use in different model families.
    }
-\label{fig:supp_arch}
+\label{fig:supp_arch}   
 \end{figure}
 
 \subsection{Complexity as a Predictor of Explainability}
@@ -391,9 +398,9 @@ The inverse relationship between Complexity and performance, and the strong asso
 
 Analysis of the time from 2019 to 2023 reveals the major development trajectory patterns. Figure~\ref{fig:supp_time} traces the rapid growth of the number of parameters with time, with later models typically being orders of magnitude larger than the earliest ones. However, the performance improvements hardly kept pace, as the very latest models brought only small improvements.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
    \centering
-   \includegraphics[width=\textwidth]{figures/figure_supp_timeline_analysis.png}
+   \includegraphics[width=0.8\textwidth]{figures/figure_supp_timeline_analysis.png}
    \caption{
    Trends over time in development from 2019 to 2023.
    (A) Variations in model effectiveness as a function of time.  
@@ -418,25 +425,30 @@ These outcomes confirm that architectural features and Complexity chiefly determ
 \subsection{Predictive Modeling of Explainability}
 We further explored how well architectural features can predict explainability by training various machine learning models to estimate explainability scores based on performance, Complexity, architecture type, number of parameters, and publication year. As detailed in Table~\ref{tab:predictability_metrics}, gradient boosting achieved the best results, with a Brier score of 0.165 and an AUROC of 0.781 when classifying high explainability ($E > 3.0$).
 
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
 \caption{Predictability of explainability from architectural features}
 \label{tab:predictability_metrics}
-\begin{tabular}{@{}lcccc@{}}
+\small
+% On définit un ratio : la dernière colonne (importance) est 1.5x plus large que les autres
+\begin{tabularx}{\textwidth}{@{} l *{3}{>{\centering\arraybackslash}X} >{\RaggedRight\arraybackslash}p{4.5cm} @{}}
 \toprule
-\textbf{Predictor Type} & \textbf{Brier Score $\downarrow$} & \textbf{AUROC $\uparrow$} & \textbf{Calibration Error $\downarrow$} & \textbf{Feature Importance (Top 3)} \\
+\textbf{Predictor Type} & \textbf{Brier $\downarrow$} & \textbf{AUROC $\uparrow$} & \textbf{Calib. $\downarrow$} & \textbf{Feature Importance (Top 3)} \\
 \midrule
 Linear Regression & 0.234 & 0.612 & 0.045 & Complexity, Architecture, Parameters \\
-Random Forest & 0.187 & 0.734 & 0.028 & Architecture, Year, Complexity \\
+\addlinespace
+Random Forest     & 0.187 & 0.734 & 0.028 & Architecture, Year, Complexity \\
+\addlinespace
 Gradient Boosting & 0.165 & 0.781 & 0.021 & Architecture, Complexity, Parameters \\
-Neural Network & 0.172 & 0.768 & 0.025 & Parameters, Architecture, Year \\
+\addlinespace
+Neural Network    & 0.172 & 0.768 & 0.025 & Parameters, Architecture, Year \\
 \midrule
-\textbf{Ensemble Average} & 0.189 & 0.724 & 0.030 & \textit{Architecture dominates} \\
+\textbf{Ensemble Avg.} & 0.189 & 0.724 & 0.030 & \textit{Architecture dominates} \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \vspace{0.2cm}
-\small
-Note: Predictability assessed via 5-fold cross-validation of predicting high explainability ($E > 3.0$) from architectural features.
+\footnotesize
+Note: Predictability assessed via 5-fold cross-validation of predicting high explainability ($E > 3.0$) from architectural features. Calib. = Calibration Error.
 \end{table}
 
 Feature importance assessment consistently identified architectural family as the strongest predictor across models. Complexity and number of parameters also contributed notably, while performance showed minimal predictive value, strengthening the conclusion that performance and explainability are largely independent.
@@ -514,21 +526,26 @@ Although the focus of this paper is on architectural features as indicators of e
 
 Our study offers several numerical guidelines for decision-makers weighing performance and explainability in real-world scenarios.
 
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
-\caption{Evidence-based recommendations for model selection across application contexts}
-\label{tab:practical_recommendations}
-\begin{tabular}{@{}p{0.25\textwidth}p{0.35\textwidth}p{0.3\textwidth}@{}}
+\caption{Model selection recommendations based on use-case requirements.}
+\label{tab:recommendations}
+\small % Passage à \small pour une meilleure lisibilité que \footnotesize
+\begin{tabularx}{\textwidth}{@{} >{\RaggedRight\bfseries}p{3.5cm} >{\RaggedRight}p{3cm} L @{}}
 \toprule
-\textbf{Application Context} & \textbf{Recommended Architecture} & \textbf{Rationale and Key Considerations} \\
+\textbf{Context / Domain} & \textbf{Recommended Architecture} & \textbf{Rationale and Key Considerations} \\
 \midrule
-\textbf{High-stakes domains} (healthcare diagnosis, financial risk assessment, legal decision support) & Encoder models (RoBERTa, DeBERTa) & Regulatory compliance requirements, need for error analysis and audit trails, stakeholder trust dependencies, ethical responsibility for producing explainable decisions \\
-\textbf{Creative generation tasks} (content creation, dialogue systems, creative writing assistance) & Decoder models (GPT series) & Generation quality and coherence, creative variation capabilities, less stringent explainability requirements, user expectations for "inspirational" rather than "explainable" outputs \\
-\textbf{Resource-constrained environments} (edge devices, real-time systems, cost-sensitive deployments) & Efficient encoders (ALBERT, DistilBERT, ELECTRA) & Computational and Memory constraints, energy efficiency requirements, deployment cost considerations, maintainability with limited technical resources \\
-\textbf{Multitask and general-purpose systems} (virtual assistants, educational tools, research platforms) & Encoder-decoder hybrids (T5, BART) & Versatility across understanding and generation tasks, balanced capabilities, moderate explainability sufficient for diverse but not critical applications \\
-\textbf{Research and development contexts} (methodology development, experimental systems, academic research) & Modular encoder designs & Experimental flexibility, analysis capabilities, community support and tooling, reproducibility requirements, contribution to interpretability research \\
+\textbf{High-stakes domains} (Healthcare, Finance, Legal) & Encoder models (RoBERTa, DeBERTa) & Regulatory compliance, necessity for audit trails, stakeholder trust, and ethical responsibility. \\
+\addlinespace
+\textbf{Creative generation} (Content creation, Dialogue) & Decoder models (GPT series) & High generation quality and coherence. User expectations focus on output "inspiration" over explainability. \\
+\addlinespace
+\textbf{Resource-constrained} (Edge devices, Real-time) & Efficient encoders (DistilBERT, ALBERT) & Strict computational/memory limits and energy efficiency requirements. Low deployment costs. \\
+\addlinespace
+\textbf{General-purpose} (Virtual assistants, Research) & Encoder-decoder (T5, BART) & Versatility across understanding and generation. Balanced capabilities for non-critical apps. \\
+\addlinespace
+\textbf{R\&D Contexts} (Methodology, Academic) & Modular designs & Experimental flexibility, community tooling, and reproducibility for interpretability research. \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 These recommendations advocate for architectural decisions to be based on application needs rather than assuming that architectural features are well-matched to requirements; this can achieve a pleasant balance between performance and explainability.
@@ -551,7 +568,7 @@ We are still far from flawless ways to compare rather different NLP systems. Our
 
 \subsubsection{Temporal Scope and Rapid Evolution}
 
-The period 2019-2023, which our study summarizes, represents the NLP segment that is mostly based on transformer models and scaling strategies. New paradigms, such as state-space models \cite{gu2023mamba}, mixture-of-experts architectures \cite{jiang2024mixtral}, or entirely novel types, may significantly change the performance-explainability relationship. Hence, our insights primarily focus on current transformer-based approaches and cannot be extrapolated to all architectures.
+The period 2019-2023, which our study summarizes, represents the NLP segment that is mostly based on transformer models and scaling strategies. New paradigms, such as state-space models, mixture-of-experts architectures, or entirely novel types, may significantly change the performance-explainability relationship. Hence, our insights primarily focus on current transformer-based approaches and cannot be extrapolated to all architectures.
 
 \subsubsection{Context Dependence of Explainability Needs}
 
@@ -628,69 +645,70 @@ The author acknowledges the use of Grammarly for language refinement and formatt
 \section{Complete Model Specifications}
 \label{app:model_specs}
 
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
-\caption{Complete specifications of all 21 NLP models analyzed in this meta-analysis}
-\begin{adjustbox}{width=\textwidth}
-\begin{tabular}{@{}lllllllll@{}}
+\caption{Key specifications of all 21 NLP models analyzed (2019--2023)}
+\label{tab:models_overview}
+\scriptsize % On passe en scriptsize car le volume de données est très important
+\setlength{\tabcolsep}{2pt} % Réduction drastique de l'espace entre colonnes
+
+\begin{tabularx}{\textwidth}{@{} l c l r c c c l L @{}}
 \toprule
-\textbf{Model} & \textbf{Year} & \textbf{Architecture} & \textbf{Params (M)} & \textbf{Performance} & \textbf{Explain.} & \textbf{Complexity} & \textbf{Primary Benchmark} & \textbf{Key Architectural Features} \\
+\textbf{Model} & \textbf{Year} & \textbf{Arch.} & \textbf{Params} & \textbf{Perf.} & \textbf{Expl.} & \textbf{Compl.} & \textbf{Bench.} & \textbf{Key Features} \\
 \midrule
-BERT-base & 2019 & Encoder & 110 & 79.2 & 3.5 & 2.0 & GLUE & Masked LM, Next Sentence Prediction \\
-BERT-large & 2019 & Encoder & 340 & 82.1 & 3.0 & 3.0 & GLUE & Masked LM, Next Sentence Prediction \\
-RoBERTa-base & 2019 & Encoder & 125 & 80.3 & 3.3 & 2.5 & GLUE & Dynamic masking, no NSP \\
-RoBERTa-large & 2019 & Encoder & 355 & 86.4 & 3.0 & 3.5 & GLUE & Dynamic masking, no NSP \\
-ALBERT-base & 2020 & Encoder & 12 & 72.5 & 4.0 & 1.5 & GLUE & Parameter sharing, factorized embedding \\
-ALBERT-xxlarge & 2020 & Encoder & 235 & 84.3 & 3.8 & 2.5 & GLUE & Parameter sharing, factorized embedding \\
-DistilBERT & 2020 & Encoder & 66 & 75.2 & 3.8 & 2.0 & GLUE & Knowledge distillation, 40\% smaller \\
-DeBERTa-base & 2021 & Encoder & 184 & 84.7 & 2.5 & 3.5 & GLUE & Disentangled attention, enhanced mask decoder \\
-DeBERTa-large & 2021 & Encoder & 435 & 90.8 & 2.0 & 4.5 & GLUE & Disentangled attention, enhanced mask decoder \\
-ELECTRA-base & 2020 & Encoder & 110 & 82.4 & 3.5 & 2.5 & GLUE & Replaced token detection, generator-discriminator \\
-ELECTRA-large & 2020 & Encoder & 335 & 85.2 & 3.2 & 3.0 & GLUE & Replaced token detection, generator-discriminator \\
-XLNet-base & 2020 & Encoder & 117 & 81.3 & 2.8 & 3.5 & GLUE & Permutation language modeling, two-stream attention \\
-XLNet-large & 2020 & Encoder & 340 & 87.2 & 2.5 & 4.0 & GLUE & Permutation language modeling, two-stream attention \\
-T5-base & 2020 & Enc-Dec & 220 & 73.1 & 2.5 & 3.0 & SuperGLUE & Text-to-text unified framework \\
-T5-large & 2020 & Enc-Dec & 770 & 78.9 & 2.0 & 4.0 & SuperGLUE & Text-to-text unified framework \\
-BART-base & 2020 & Enc-Dec & 139 & 78.5 & 2.8 & 3.0 & CNN/DM & Denoising autoencoder, bidirectional encoder \\
-BART-large & 2020 & Enc-Dec & 406 & 82.5 & 2.8 & 3.8 & CNN/DM & Denoising autoencoder, bidirectional encoder \\
-PEGASUS-large & 2020 & Enc-Dec & 568 & 78.9 & 2.3 & 4.0 & XSum & Gap-sentence generation, self-supervised objective \\
-FLAN-T5-base & 2022 & Enc-Dec & 248 & 49.9 & 2.0 & 2.5 & MMLU & Instruction tuning, multi-task training \\
-GPT-3 & 2020 & Decoder & 175,000 & 80.5 & 1.0 & 5.0 & MMLU & Autoregressive, few-shot learning \\
-GPT-3.5 & 2022 & Decoder & 175,000 & 85.2 & 1.0 & 5.0 & MMLU & Reinforcement learning from human feedback \\
+BERT-base & 2019 & Enc. & 110M & 79.2 & 3.5 & 2.0 & GLUE & Masked LM, Next Sentence Prediction \\
+BERT-large & 2019 & Enc. & 340M & 82.1 & 3.0 & 3.0 & GLUE & Masked LM, Next Sentence Prediction \\
+RoBERTa-b. & 2019 & Enc. & 125M & 80.3 & 3.3 & 2.5 & GLUE & Dynamic masking, no NSP \\
+RoBERTa-l. & 2019 & Enc. & 355M & 86.4 & 3.0 & 3.5 & GLUE & Dynamic masking, no NSP \\
+ALBERT-b. & 2020 & Enc. & 12M & 72.5 & 4.0 & 1.5 & GLUE & Param. sharing, fact. embedding \\
+ALBERT-xxl. & 2020 & Enc. & 235M & 84.3 & 3.8 & 2.5 & GLUE & Param. sharing, fact. embedding \\
+DistilBERT & 2020 & Enc. & 66M & 75.2 & 3.8 & 2.0 & GLUE & Distillation, 40\% smaller \\
+DeBERTa-b. & 2021 & Enc. & 184M & 84.7 & 2.5 & 3.5 & GLUE & Disentangled attention \\
+DeBERTa-l. & 2021 & Enc. & 435M & 90.8 & 2.0 & 4.5 & GLUE & Enhanced mask decoder \\
+ELECTRA-b. & 2020 & Enc. & 110M & 82.4 & 3.5 & 2.5 & GLUE & Replaced token detection \\
+ELECTRA-l. & 2020 & Enc. & 335M & 85.2 & 3.2 & 3.0 & GLUE & Replaced token detection \\
+XLNet-base & 2020 & Enc. & 117M & 81.3 & 2.8 & 3.5 & GLUE & Permutation LM \\
+XLNet-large & 2020 & Enc. & 340M & 87.2 & 2.5 & 4.0 & GLUE & Two-stream attention \\
+T5-base & 2020 & E-D & 220M & 73.1 & 2.5 & 3.0 & SGLUE & Text-to-text unified framework \\
+T5-large & 2020 & E-D & 770M & 78.9 & 2.0 & 4.0 & SGLUE & Text-to-text unified framework \\
+BART-base & 2020 & E-D & 139M & 78.5 & 2.8 & 3.0 & CNN/DM & Denoising autoencoder \\
+BART-large & 2020 & E-D & 406M & 82.5 & 2.8 & 3.8 & CNN/DM & Bidirectional encoder \\
+PEGASUS-l. & 2020 & E-D & 568M & 78.9 & 2.3 & 4.0 & XSum & Gap-sentence generation \\
+FLAN-T5-b. & 2022 & E-D & 248M & 49.9 & 2.0 & 2.5 & MMLU & Instruction tuning \\
+GPT-3 & 2020 & Dec. & 175B & 80.5 & 1.0 & 5.0 & MMLU & Autoregressive, few-shot \\
+GPT-3.5 & 2022 & Dec. & 175B & 85.2 & 1.0 & 5.0 & MMLU & RL from human feedback \\
 \bottomrule
-\end{tabular}
-\end{adjustbox}
+\end{tabularx}
 \end{table}
 
 \section{Detailed Statistical Analysis Results}
 \label{app:statistical_analysis}
 
 \subsection{Correlation Matrix Across All Variables}
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
-\caption{Complete Spearman correlation matrix for all analyzed variables (n=21)}
-\label{tab:full_correlation_matrix}
-\begin{adjustbox}{width=\textwidth}
-\begin{tabular}{@{}lrrrrr@{}}
+\caption{Complete Spearman correlation matrix.}
+\label{tab:correlation_matrix}
+\small %
+\begin{tabularx}{\textwidth}{@{} L *{5}{>{\centering\arraybackslash}X} @{}}
 \toprule
- & \textbf{Performance} & \textbf{Explainability} & \textbf{Parameters} & \textbf{Complexity} & \textbf{Year} \\
+ & \textbf{Perf.} & \textbf{Expl.} & \textbf{Params} & \textbf{Compl.} & \textbf{Year} \\
 \midrule
-\textbf{Performance} & 1.000 & -0.160 (p=0.489) & 0.270 (p=0.236) & 0.270 (p=0.236) & -0.203 (p=0.376) \\
-\textbf{Explainability} & -0.160 (p=0.489) & 1.000 & -0.912 (p<0.001) & -0.951 (p<0.001) & -0.203 (p=0.376) \\
-\textbf{Parameters} & 0.270 (p=0.236) & -0.912 (p<0.001) & 1.000 & 0.925 (p<0.001) & 0.331 (p=0.143) \\
-\textbf{Complexity} & 0.270 (p=0.236) & -0.951 (p<0.001) & 0.925 (p<0.001) & 1.000 & 0.342 (p=0.130) \\
+\textbf{Perf.} & 1.000 & -0.160 (p=0.489) & 0.270 (p=0.236) & 0.270 (p=0.236) & -0.203 (p=0.376) \\
+\textbf{Expl.} & -0.160 (p=0.489) & 1.000 & -0.912 (p<0.001) & -0.951 (p<0.001) & -0.203 (p=0.376) \\
+\textbf{Params} & 0.270 (p=0.236) & -0.912 (p<0.001) & 1.000 & 0.925 (p<0.001) & 0.331 (p=0.143) \\
+\textbf{Compl.} & 0.270 (p=0.236) & -0.951 (p<0.001) & 0.925 (p<0.001) & 1.000 & 0.342 (p=0.130) \\
 \textbf{Year} & -0.203 (p=0.376) & -0.203 (p=0.376) & 0.331 (p=0.143) & 0.342 (p=0.130) & 1.000 \\
 \bottomrule
-\end{tabular}
-\end{adjustbox}
+\end{tabularx}
 \end{table}
 
 \subsection{ANOVA Results for Architectural Family Comparisons}
-\begin{table}[H]
+\begin{table}[ht!]
 \centering
 \caption{Detailed ANOVA results for performance and explainability by architectural family}
 \label{tab:anova_details}
-\begin{tabular}{@{}lcccccc@{}}
+\begin{tabularx}{\textwidth}{@{}l XXXXXX @{}}
 \toprule
 \textbf{Variable} & \textbf{Source} & \textbf{SS} & \textbf{df} & \textbf{MS} & \textbf{F} & \textbf{p-value} \\
 \midrule
@@ -702,7 +720,7 @@ Explainability & Between Groups & 19.48 & 2 & 9.74 & 11.72 & <0.001 \\
  & Within Groups & 14.96 & 18 & 0.83 &  &  \\
  & Total & 34.44 & 20 & 1.72 &  &  \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Regression Diagnostics and Assumption Checks}
@@ -734,80 +752,83 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Install package in development mode: pip install -e.
+# Install package in development mode (if applicable)
+pip install -e .
 \end{lstlisting}
 
 \subsection{Running the Complete Analysis Pipeline}
-The complete analysis can be reproduced with a single command:
+The complete analysis can be reproduced by running the scripts in the following order:
 \begin{lstlisting}[language=bash]
-python scripts/run_full_analysis.py --config configs/main.yaml
-\end{lstlisting}
+# Step 1: Data collection
+python code/01_data_collection/collect_data.py
+python code/01_data_collection/manual_performance_dataset.py
 
-Individual analysis components can be executed separately for debugging or partial reproduction:
-\begin{lstlisting}[language=bash]
-# Step 1: Data collection and preprocessing
-python scripts/data_collection.py --output data/raw/
-
-# Step 2: Explainability scoring
-python scripts/explainability_scoring.py --input data/raw/ --output data/scores/
+# Step 2: Data processing and merging
+python code/02_data_processing/clean_data.py
+python code/02_data_processing/merge_data.py
 
 # Step 3: Statistical analysis
-python scripts/statistical_analysis.py --input data/scores/ --output results/
+python code/03_analysis/meta_analysis.py
 
 # Step 4: Visualization generation
-python scripts/visualization.py --input results/ --output figures/
-
-# Step 5: Report generation
-python scripts/report_generation.py --input results/ --output paper/
+python code/04_visualization/figure_supp_architecture_correlation.py
+python code/04_visualization/figure_supp_timeline.py
 \end{lstlisting}
 
 \subsection{Dataset Structure and Contents}
-The dataset follows a hierarchical structure:
+The repository is organized as follows:
 \begin{lstlisting}[language=bash]
+code/
+|-- 01_data_collection/
+|   |-- collect_data.py
+|   `-- manual_performance_dataset.py
+|-- 02_data_processing/
+|   |-- clean_data.py
+|   `-- merge_data.py
+|-- 03_analysis/
+|   |-- meta_analysis.py
+|-- 04_visualization/
+|   |-- figure_supp_architecture_correlation.py
+|   `-- figure_supp_timeline.py
+`-- requirements.txt
+
 data/
-|-- raw/                    # Raw collected data
-|   |-- performance/       # Performance metrics from benchmarks
-|   |-- architecture/      # Architectural specifications
-|   `-- metadata/         # Publication metadata and citations
-|-- processed/             # Cleaned and normalized data
-|   |-- normalized_scores.csv
-|   |-- explainability_ratings.csv
-|   `-- model_characteristics.csv
-`-- final/                # Final analysis dataset
-    `-- meta_analysis_dataset.csv
+|-- processed/
+|   |-- comprehensive_nlp_models_database.csv
+|   |-- manual_model_performance.csv
+|   `-- merged_analysis_dataset.csv
 \end{lstlisting}
 
-The main analysis data file (\texttt{meta\_analysis\_dataset.csv}) holds these details about different models:
+The main analysis data file (\texttt{merged\_analysis\_dataset.csv}) contains the following fields for each model:
 \begin{itemize}
-   \item \texttt{model\_id}: A unique model identifier (e.g., "bert-base-uncased")
+   \item \texttt{model\_id}: Unique model identifier (e.g., "bert-base-uncased")
    \item \texttt{year}: Publication year
-   \item \texttt{architecture}: Whether the model is an Encoder, Decoder, or Encoder-Decoder
-   \item \texttt{parameters}: The total number of parameters
-   \item \texttt{performance}: Performance score after normalization (0-100)
-   \item \texttt{explainability}: The overall explainability score (1-5)
-   \item \texttt{Complexity}: Complexity level (1-5)
-   \item \texttt{citation}: Benchmark results in a JComplexity  \item \texttt{citation}: Reference to the main publication
+   \item \texttt{architecture}: Encoder, Decoder, or Encoder-Decoder
+   \item \texttt{parameters}: Total number of parameters
+   \item \texttt{performance}: Normalized performance score (0-100)
+   \item \texttt{explainability}: Composite explainability score (1-5)
+   \item \texttt{complexity}: Complexity level (1-5)
+   \item \texttt{citation}: Reference to the main publication
 \end{itemize}
 
 \section{Verification and Validation Procedures}
-
-The reproducibility of our analysis was verified as follows:
-
+The reproducibility of our analysis can be verified as follows:
 \begin{lstlisting}[language=bash]
-# Run verification tests
+# Run verification tests (if tests are available)
 pytest tests/ -v
 
-# Check data integrity
+# Check data integrity (if script exists)
 python scripts/verify_data.py --check-all
 
-# Reproduce specific key results
+# Reproduce specific key results (if scripts exist)
 python scripts/reproduce_result.py --result "correlation_performance_explainability"
 python scripts/reproduce_result.py --result "anova_architecture"
 python scripts/reproduce_result.py --result "regression_explainability"
 
-# Generate reproducibility report
+# Generate reproducibility report (if script exists)
 python scripts/reproducibility_report.py --output report/
 \end{lstlisting}
+\noindent\textit{Note:} Some verification scripts (e.g., \texttt{verify\_data.py}, \texttt{reproduce\_result.py}) are placeholders. The core reproducibility relies on the analysis pipeline described above.
 
 \subsection{Known Limitations and Workarounds}
 \begin{itemize}
